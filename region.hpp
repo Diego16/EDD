@@ -6,6 +6,7 @@
 #include "paquete.h"
 #include <string>
 #include <list>
+#include "oficina.h"
 using namespace std;
 
 void Region::setCodigo(string codigoIn){
@@ -22,14 +23,20 @@ string Region::getCodigo( ){
 string Region::getNombre( ){
     return nombre;
 }
-void Region::setListaPaquetes(list<Paquete> listaPaquetesIn){
+void Region::setListaPaquetes(list<Paquete*> listaPaquetesIn){
     listaPaquetes = listaPaquetesIn;
 }
-list<Paquete> Region::getListaPaquetes(){
+list<Paquete*>& Region::getListaPaquetes(){
     return listaPaquetes;
 }
-bool Region::agregarPaquete(Paquete paqueteIn){
+bool Region::agregarPaquete(Paquete* paqueteIn){
     listaPaquetes.insert(listaPaquetes.begin(), paqueteIn);
     return true;
+}
+void Region::setOficinaDirecta(Oficina* oficinaIn){
+    oficinaDirecta = oficinaIn;
+}
+Oficina* Region::getOficinaDirecta(){
+    return oficinaDirecta;
 }
 #endif // __REGION__HPP__

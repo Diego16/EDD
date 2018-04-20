@@ -9,8 +9,8 @@ using namespace std;
 class Paquete{
 
 	private:
-		Persona remitente;
-		Persona destinatario;
+		Persona* remitente;
+		Persona* destinatario;
 		int peso;
 		string tipo;
 		string numGuia;
@@ -18,14 +18,14 @@ class Paquete{
 	public:
 		//Paquete();
 		//~Paquete();
-        void setRemitente(Persona remitenteIn);
-        void setDestinatario(Persona destinararioIn);
+        void setRemitente(Persona* remitenteIn);
+        void setDestinatario(Persona* destinararioIn);
         void setPeso(int pesoIn);
         void setNumGuia(string numGuiaIn);
         void setTipo(string tipoIn);
 
-        Persona getRemitente( );
-        Persona getDestinatario( );
+        Persona* getRemitente( );
+        Persona* getDestinatario( );
         int getPeso( );
         string getTipo( );
         string getNumGuia();

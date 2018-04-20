@@ -21,10 +21,10 @@ void Oficina::setDireccion(string direccionIn){
 void Oficina::setCiudad(string ciudadIn){
 	ciudad = ciudadIn;
 }
-void Oficina::setListaRegiones(list<Region> listaRegionesIn){
+void Oficina::setListaRegiones(list<Region*> listaRegionesIn){
 	listaRegiones = listaRegionesIn;
 }
-void Oficina::setListaPaquetes(list<Paquete> listaPaquetesIn){
+void Oficina::setListaPaquetes(list<Paquete*> listaPaquetesIn){
 	listaPaquetes = listaPaquetesIn;
 }
 string Oficina::getCodigo( ){
@@ -39,23 +39,23 @@ string Oficina::getDireccion( ){
 string Oficina::getCiudad( ){
 	return ciudad;
 }
-list<Region> Oficina::getListaRegiones(){
+list<Region*>& Oficina::getListaRegiones(){
 	return listaRegiones;
 }
-list<Paquete> Oficina::getListaPaquetes(){
+list<Paquete*>& Oficina::getListaPaquetes(){
 	return listaPaquetes;
 }
-void Oficina::agregarRegion(Region regionIn)
+void Oficina::agregarRegion(Region* regionIn)
 {
 	listaRegiones.insert(listaRegiones.begin(),regionIn);
 }
-bool Oficina::agregarPaquete(Paquete paqueteIn, string codigoRegionIn)
+bool Oficina::agregarPaquete(Paquete* paqueteIn, string codigoRegionIn)
 {
-	for (list<Region>::iterator itR=listaRegiones.begin(); itR != listaRegiones.end(); ++itR)
+	for (list<Region*>::iterator itR=listaRegiones.begin(); itR != listaRegiones.end(); ++itR)
 	{
-		if((*itR).getCodigo() == codigoRegionIn)
+		if((*itR)->getCodigo() == codigoRegionIn)
 		{
-			(*itR).agregarPaquete(paqueteIn);
+			(*itR)->agregarPaquete(paqueteIn);
 			return true;
 		}
 	}

@@ -10,7 +10,6 @@
 #include <list>
 #include <string.h>
 #include <fstream>
-#include <string>
 #include <stdlib.h>
 #include <limits.h>
 #include <cmath>
@@ -52,55 +51,31 @@ int main()
 {
 	bool on = true;
 	bool encontrado=false;
-	string lineIn=" ", lineIn2=" ";
-	char* comand;
+	string lineIn=" ";
 	char comando[300]={' '};
 	list<Persona*> listIn;
 	list<Paquete*> listInP;
 	list<Oficina*> listInO;
 	list<Region*> listInR;
-	list<char*> miLista;
-	list<char*>::iterator it;
-
-	cout<<"1"<<endl;
-	cargarOficinas("Oficinas.csv",listInO);
-	cout<<"2"<<endl;
-	cargarRegiones("Regiones.csv",listInO,listInR);
-	cout<<"3"<<endl;
-	cargarPersonas("Personas.csv", listIn);
-	cout<<"4"<<endl;
-	cargarPaquetes("Paquetes.csv",listInP,listIn,listInO,listInR);
-	cout<<"5"<<endl;
-	cout<< "tamanios: "<<listInO.size()<<" "<<listInR.size()<<" "<<listIn.size()<<" "<<listInP.size()<<endl;
-	//contarPaquetes(listInO);
-	//imprimirOficinasYReguiones(listInO,listInR);
-
-
-
 	while(on)
 	{
-
-		//cout<<comand<<"$ ";
-
+		cout<<"$ ";
 		cin.getline(comando,300);
-
 		char* pch;
+		char* miLista[10];
+		int cantCmd=0;
 		pch = strtok (comando," ");
-		miLista.clear();
 		while (pch != NULL)
 		{
-			miLista.push_back(pch);
+			miLista[cantCmd]=pch;
+			cantCmd++;
 			pch = strtok (NULL, " ");
 		}
-		it=miLista.begin();
-		comand=*miLista.begin();
-		cout<<"comand "<<comand<<endl;
-		if (strcmp(comand,"cargarPersonas")==0)
+		if (strcmp(miLista[0],"cargarPersonas")==0)
 		{
-			if (miLista.size()==2)
+			if (cantCmd==2)
 			{
-				it++;
-				lineIn=*it;
+				lineIn=miLista[1];
 				if(cargarPersonas(lineIn,listIn))
 				{
 					cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
@@ -115,12 +90,11 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-		else if(strcmp(comand,"cargarPaquetes")==0)
+		else if(strcmp(miLista[0],"cargarPaquetes")==0)
 		{
-			if (miLista.size()==2)
+			if (cantCmd==2)
 			{
-				it++;
-				lineIn=*it;
+				lineIn=miLista[1];
 				if(cargarPaquetes(lineIn,listInP, listIn, listInO, listInR))
 				{
 					cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
@@ -135,17 +109,16 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-		else if(strcmp(comand,"cargarRegiones")==0)
+		else if(strcmp(miLista[0],"cargarRegiones")==0)
 		{
-			if (miLista.size()==2)
+			if (cantCmd==2)
 			{
-				it++;
-				lineIn=*it;
-				if(true)//cargarRegiones())
+				lineIn=miLista[1];
+				if(cargarRegiones(lineIn,listInO,listInR))//cargarRegiones())
 				{
 					cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 				}
-				else if(true)//!cargarRegiones())
+				else if(cargarRegiones(lineIn,listInO,listInR))
 				{
 					cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
 				}
@@ -155,17 +128,16 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-		else if(strcmp(comand,"cargarOficinas")==0)
+		else if(strcmp(miLista[0],"cargarOficinas")==0)
 		{
-			if (miLista.size()==2)
+			if (cantCmd==2)
 			{
-				it++;
-				lineIn=*it;
-				if(true)//cargarOficinas())
+				lineIn=miLista[1];
+				if(cargarOficinas(lineIn,listInO))//cargarOficinas())
 				{
 					cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 				}
-				else if(true)//!cargarOficinas())
+				else if(!cargarOficinas(lineIn,listInO))//!cargarOficinas())
 				{
 					cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
 				}
@@ -176,10 +148,10 @@ int main()
 			}
 		}
 
-		else if(strcmp(comand,"registrarPersona")==0)
+		else if(strcmp(miLista[0],"registrarPersona")==0)
 		{
 
-			if (miLista.size()==1)
+			if (cantCmd==1)
 			{
 				string nombre,apellido,cedula,direccion,ciudad,telefono;
 				cout<<"Nombre: ";
@@ -202,9 +174,9 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-		else if(strcmp(comand,"registrarPaquete")==0)
+		else if(strcmp(miLista[0],"registrarPaquete")==0)
 		{
-			if (miLista.size()==1)
+			if (cantCmd==1)
 			{
 				string cedulaRemitente,cedulaDestinatario,peso,tipoContenido,numGuia;
 				cout<<"Cedula remitente: ";
@@ -227,13 +199,18 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-		else if(strcmp(comand,"registrarPaquete")==0)
+		else if(strcmp(miLista[0],"registrarRegion")==0)
 		{
-			if (miLista.size()==1)
+			if (cantCmd==1)
 			{
-				string codReg;
-				//@TODO captar datos region
-				if(true)//registrarRegion())
+				string codReg, nombre, codigoOficinaPadre;
+				cout<<"Codigo de la region: ";
+				cin>>codReg;
+				cout<<"Nombre de la region: ";
+				cin>>nombre;
+				cout<<"Codigo oficina: ";
+				cin>>codigoOficinaPadre;
+				if(registrarRegion(codReg, nombre, codigoOficinaPadre,listInO,listInR))
 					cout<<"La region identificada con el codigo "<<codReg<<" ha sido registrada exitosamente"<<endl;
 				else
 					cout<<"La region identificada con el codigo "<<codReg<<" ya se encuentra registrado en el sistema"<<endl;
@@ -243,13 +220,20 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-		else if(strcmp(comand,"registrarOficina")==0)
+		else if(strcmp(miLista[0],"registrarOficina")==0)
 		{
-			if (miLista.size()==1)
+			if (cantCmd==1)
 			{
-				string codOfi;
-				//@TODO captar datos oficina
-				if(true)//registrarOficina())
+				string codOfi,nombre,direccion,ciudad;
+				cout<<"Codigo oficina: ";
+				cin>>codOfi;
+				cout<<"Nombre oficina: ";
+				cin>>nombre;
+				cout<<"Direccion: ";
+				cin>>direccion;
+				cout<<"Ciudad: ";
+				cin>>ciudad;
+				if(registrarOficina(codOfi,nombre,direccion,ciudad,listInO))
 					cout<<"La oficina identificada con el codigo "<<codOfi<<" ha sido registrada exitosamente"<<endl;
 				else
 					cout<<"La oficina identificada con el codigo "<<codOfi<<" ya se encuentra registrada en el sistema"<<endl;
@@ -259,24 +243,23 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-		else if(strcmp(comand,"conteoPaquetes")==0)
+		else if(strcmp(miLista[0],"conteoPaquetes")==0)
 		{
-			if (miLista.size()==1)
+			if (cantCmd==1)
 			{
 				imprimirPaquetesXRegion(listInO,listInR,listInP);
 			}
 			else
 				cout<< "Parametros invalidos"<<endl;
 		}
-		else if(strcmp(comand,"ayuda")==0)
+		else if(strcmp(miLista[0],"ayuda")==0)
 		{
-			if (miLista.size()==1)
+			if (cantCmd==1)
 			{
 				cout<<endl<<"Comandos disponibles: "<<endl<<"   cargarPersonas"<<endl<<"   cargarPaquetes"<<endl<<"   cargarRegiones"<<endl<<"   cargarOficinas"<<endl<<"   registrarPersona"<<endl<<"   registrarPaquete"<<endl<<"   registrarOficina"<<endl<<"   registrarRegion"<<endl<<"   conteoPaquetes"<<endl<<"   salir"<<endl;
 			}
-			else if (miLista.size()==2){
-				it++;
-				lineIn=*it;
+			else if (cantCmd==2){
+				lineIn=miLista[1];
 				if(lineIn=="cargarPersonas")
 					cout<<"===cargarPersonas <nombre_archivo>"<<endl<<"====Carga en memoria la información de las personas contenida en el archivo identificado por nombre_archivo"<<endl;
 				if(lineIn=="cargarPaquetes")
@@ -299,7 +282,7 @@ int main()
 					cout<<"===salir"<<endl<<"====Termina la ejecucion de la aplicacion."<<endl;
 			}
 		}
-		else if(strcmp(comand,"salir")==0)
+		else if(strcmp(miLista[0],"salir")==0)
 			on = false;
 		else
 			cout<<"===Comando no valido"<<endl;
@@ -324,21 +307,21 @@ bool cargarPersonas(string nombreArchivo, list<Persona*> &personasMemoria)
 			vtoken = tokenizador2(line, ',');
 			if(registrarPersona(vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], personasMemoria))
 			{
-			    exitos++;
+				exitos++;
 				res=res;
 			}
-			else{
-                res= 1;
-                fracasos++;
+			else
+			{
+				res= 1;
+				fracasos++;
 			}
 			i++;
 		}
 	}
 	else
 		return false;
-
-    myfile.close();
-    cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
+	myfile.close();
+	cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
 	if(res==1)
 		cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
 	return true;
@@ -355,28 +338,27 @@ bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria, list<
 	{
 		getline (myfile,line);
 		int i = 0;
-		while((myfile.peek()!=EOF)){
+		while((myfile.peek()!=EOF))
+		{
 			getline (myfile,line);
 			vtoken = tokenizador2(line, ',');
-
-			//cout<<vtoken[10]<<" "<<vtoken[9]<<" "<<vtoken[8]<<" "<<vtoken[7]<<" "<<vtoken[6]<<" "<<vtoken[5]<<" "<<vtoken[4]<<" "<<vtoken[3]<<" "<<vtoken[2]<<" "<<vtoken[1]<<" "<<vtoken[0]<<endl;
-			if(registrarPaquete(vtoken[10],vtoken[9],vtoken[8],vtoken[7],vtoken[6],vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], paquetesMemoria,
-                        personasMemoria, oficinasMemoria, regionesMemoria)){
+			if(registrarPaquete(vtoken[10],vtoken[9],vtoken[8],vtoken[7],vtoken[6],vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], paquetesMemoria, personasMemoria, oficinasMemoria, regionesMemoria))
+			{
 				res=res;
 				exitos++;
-			}else {
-			    res=1;
-			    fracasos++;
-            }
-
+			}
+			else
+			{
+				res=1;
+				fracasos++;
+			}
 			i++;
 		}
 	}
 	else
 		return false;
-
-    myfile.close();
-    cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
+	myfile.close();
+	cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
 	if(res==1)
 		cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
 	return true;
@@ -386,22 +368,19 @@ vector<string> tokenizador(string stringIn, char token)
 	vector<string> listOut;
 	string aux;
 	int i = 1;
-	while( i <= stringIn.size()){
-
-		if(stringIn[i] == token){
+	while( i <= stringIn.size())
+	{
+		if(stringIn[i] == token)
+		{
 			i++;
-
 			listOut.insert(listOut.begin(), aux );
 			aux.clear();
 			i++;
 			i++;
 		}
-
-        if(i <= stringIn.size())
-            aux += stringIn[i];
-
+		if(i <= stringIn.size())
+			aux += stringIn[i];
 		i++;
-
 	}
 	//aux.resize(aux.size()-1);
 	//listOut.insert(listOut.begin(), aux );
@@ -412,21 +391,16 @@ vector<string> tokenizador2(string stringIn, char token)
 	vector<string> listOut;
 	string aux;
 	int i = 0;
-	while( i <= stringIn.size()){
-
-		if(stringIn[i] == token){
+	while( i <= stringIn.size())
+	{
+		if(stringIn[i] == token)
+		{
 			i++;
-
 			listOut.insert(listOut.begin(), aux );
 			aux.clear();
-
 		}
-
-
-            aux += stringIn[i];
-
+		aux += stringIn[i];
 		i++;
-
 	}
 	aux.resize(aux.size()-1);
 	listOut.insert(listOut.begin(), aux );
@@ -480,30 +454,24 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
 	,string ciudadOficinaIn, string codigoRegionIn ,string nombreRegionstringIn ,
 	list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria, list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria)
 {
-
 	Paquete* paqueteAux = new Paquete();
 	Region* auxR = new Region();
 	Oficina* oAux = new Oficina();
-
 	if(!buscarPaquete(numGuiaIn, paquetesMemoria))
 	{
-
 		if(buscarOficina(codigoOficinaIn, oficinasMemoria))
 		{
-
-            oAux = buscarOficina2(codigoOficinaIn, oficinasMemoria);
-
-		    if(buscarRegion(codigoRegionIn,oAux->getListaRegiones())){
-
-                paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
-                paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-                paqueteAux->setPeso(1);
-                paqueteAux->setNumGuia(numGuiaIn);
-
-                paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
-                buscarRegion2(codigoRegionIn,buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaRegiones())->getListaPaquetes().push_back(paqueteAux);
-                return true;
-		    }
+			oAux = buscarOficina2(codigoOficinaIn, oficinasMemoria);
+			if(buscarRegion(codigoRegionIn,oAux->getListaRegiones()))
+			{
+				paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
+				paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
+				paqueteAux->setPeso(1);
+				paqueteAux->setNumGuia(numGuiaIn);
+				paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
+				buscarRegion2(codigoRegionIn,buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaRegiones())->getListaPaquetes().push_back(paqueteAux);
+				return true;
+			}
 		}
 	}
 	return false;
@@ -527,8 +495,10 @@ bool registrarPaqueteUnico(string cedulaRemitenteIn, string cedulaDestinatarioIn
 }
 bool buscarPaquete(string numGuiaIn, list<Paquete*> &paquetesMemoria)
 {
-	for (list<Paquete*>::iterator itB=paquetesMemoria.begin(); itB != paquetesMemoria.end(); ++itB){
-		if((*itB)->getNumGuia() == numGuiaIn){
+	for (list<Paquete*>::iterator itB=paquetesMemoria.begin(); itB != paquetesMemoria.end(); ++itB)
+	{
+		if((*itB)->getNumGuia() == numGuiaIn)
+		{
 			return true;
 		}
 	}
@@ -563,7 +533,6 @@ Oficina* buscarOficina2(string codigo, list<Oficina*> &oficinasMemoria)
 	{
 		if((*itB)->getCodigo() == codigo)
 			return (*itB);
-
 	}
 	return o;
 }
@@ -574,7 +543,6 @@ Region* buscarRegion2(string codigo, list<Region*> &regionesMemoria)
 	{
 		if((*itB)->getCodigo() == codigo)
 			return (*itB);
-
 	}
 	return r;
 }
@@ -606,10 +574,13 @@ void imprimirPaquetesXRegion(list<Oficina*> &oficinasMemoria, list<Region*> &reg
 {
 	int cantidadAcum = 0;
 	list<Region*> LRAux;
-	for (list<Region*>::iterator itR1=regionesMemoria.begin(); itR1 != regionesMemoria.end(); ++itR1){
-		for (list<Oficina*>::iterator itO = oficinasMemoria.begin(); itO != oficinasMemoria.end(); ++itO){
+	for (list<Region*>::iterator itR1=regionesMemoria.begin(); itR1 != regionesMemoria.end(); ++itR1)
+	{
+		for (list<Oficina*>::iterator itO = oficinasMemoria.begin(); itO != oficinasMemoria.end(); ++itO)
+		{
 			LRAux=(*itO)->getListaRegiones();
-			for (list<Region*>::iterator itR=LRAux.begin(); itR != LRAux.end(); ++itR){
+			for (list<Region*>::iterator itR=LRAux.begin(); itR != LRAux.end(); ++itR)
+			{
 				if((*itR1)->getNombre() == (*itR)->getNombre())
 				{
 					cantidadAcum += (*itR)->getListaPaquetes().size();
@@ -621,7 +592,6 @@ void imprimirPaquetesXRegion(list<Oficina*> &oficinasMemoria, list<Region*> &reg
 	}
 	cout<<" Para un total de "<<paquetesMemoria.size()<<" paquetes en el sistema"<<endl;
 }
-
 
 bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
 {
@@ -635,31 +605,27 @@ bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
 	{
 		getline (myfile,line);
 		int i = 0;
-		while((myfile.peek()!=EOF)){
+		while((myfile.peek()!=EOF))
+		{
 			getline (myfile,line);
-
 			vtoken = tokenizador(line, '"');
-			//cout<<vtoken[3]<<" "<<vtoken[2]<<" "<<vtoken[1]<<" "<<vtoken[0]<<endl;
-
-            if(registrarOficina(vtoken[3],vtoken[2],vtoken[1],vtoken[0],oficinasMemoria))
-                exitos++;
-            else
-                fracasos++;
+			if(registrarOficina(vtoken[3],vtoken[2],vtoken[1],vtoken[0],oficinasMemoria))
+				exitos++;
+			else
+				fracasos++;
 		}
-
 	}
 	else
 		return false;
-    myfile.close();
-    cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
+	myfile.close();
+	cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
 	if(res==1)
 		cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
 	return true;
 }
 bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria)
 {
-
-  	string line;
+	string line;
 	ifstream myfile(nombreArchivo.c_str());
 	vector<string> vtoken;
 	int res = 0;
@@ -671,95 +637,102 @@ bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<
 		int i = 0;
 		while((myfile.peek()!=EOF)){
 			getline (myfile,line);
-
 			vtoken = tokenizador(line, '"');
-			//cout<<vtoken[2]<<" "<<vtoken[1]<<" "<<vtoken[0]<<endl;
-
-            if(registrarRegion(vtoken[2],vtoken[1],vtoken[0],oficinasMemoria,regionesMemoria))
-                exitos++;
-            else
-                fracasos++;
+			if(registrarRegion(vtoken[2],vtoken[1],vtoken[0],oficinasMemoria,regionesMemoria))
+				exitos++;
+			else
+				fracasos++;
 		}
-
-
-	}else{return false;}
+	}
+	else 
+		return false;
 	myfile.close();
-
-    cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
+	cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
 	if(res==1)
 		cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
-	return true;
 	return true;
 }
 bool registrarOficina(string codigo, string nombre, string direccion, string ciudad,list<Oficina*> &oficinasMemoria)
 {
-    Oficina* oficinaAux = new Oficina();
-    if(!buscarOficina( codigo, oficinasMemoria)){
-        oficinaAux->setCodigo(codigo);
-        oficinaAux->setNombre(nombre);
-        oficinaAux->setDireccion(direccion);
-        oficinaAux->setCiudad(ciudad);
-        oficinasMemoria.push_front(oficinaAux);
-        return true;
-    }
+	Oficina* oficinaAux = new Oficina();
+	if(!buscarOficina( codigo, oficinasMemoria))
+	{
+		oficinaAux->setCodigo(codigo);
+		oficinaAux->setNombre(nombre);
+		oficinaAux->setDireccion(direccion);
+		oficinaAux->setCiudad(ciudad);
+		oficinasMemoria.push_front(oficinaAux);
+		return true;
+	}
 	return false;
 }
 bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria)
 {
     Region* regionAux = new Region();
     Oficina* oficinaAux;
-    if(buscarOficina(codigoOficinaPadre,oficinasMemoria)){
-        if(!buscarRegion( codigo, regionesMemoria)){
-            //cout<<"exito"<<endl;
+    if(buscarOficina(codigoOficinaPadre,oficinasMemoria))
+    {
+        if(!buscarRegion( codigo, regionesMemoria))
+        {
             regionAux->setCodigo(codigo);
             regionAux->setNombre(nombre);
             oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
             regionesMemoria.push_front(regionAux);
             oficinaAux->getListaRegiones().push_front(regionAux);
             registrarOficina(codigo, nombre, oficinaAux->getDireccion(),oficinaAux->getCiudad(),oficinasMemoria);
+            oficinaAux = buscarOficina2(codigo,oficinasMemoria);
+            oficinaAux->getListaRegiones().push_front(regionAux);
             return true;
-        }else return false;
-
-    } return false;
+        }
+        else
+        	return false;
+    } 
+    return false;
 }
-
 void contarPaquetes(list<Oficina*> &oficinasMemoria){
 
+	int suma = 0;
 	for (list<Oficina*>::iterator itB=oficinasMemoria.begin(); itB != oficinasMemoria.end(); ++itB)
 	{
-	    if(!(*itB)->getListaRegiones().empty())
-            cout<< "La cantidad de paquetes en la oficina "<<(*itB)->getNombre()<<" con influencia en las regiones: "<<" es: "<<contarPaquetesXRegion((*itB)->getListaRegiones())<<endl;
-        else cout<< "La cantidad de paquetes en la oficina "<<(*itB)->getNombre()<<endl;
+		cout<<"Oficina "<<(*itB)->getNombre()<<" cantidad de regiones: "<<(*itB)->getListaRegiones().size()<<endl;
+
+		for (list<Region*>::iterator itC=(*itB)->getListaRegiones().begin(); itC != (*itB)->getListaRegiones().end(); ++itC)
+		{
+
+			cout<<"Region: "<<(*itC)->getNombre() <<" con "<<(*itC)->getListaPaquetes().size()<<" paquetes."<<endl;
+			suma += (*itC)->getListaPaquetes().size();
+		}
+		cout<< "para un total de "<< suma<< " en la oficina."<<endl;
+		cout<<"--------------"<<endl;
+		suma = 0;
+		if(!(*itB)->getListaRegiones().empty())
+		{
+
+		}
 	}
 }
 
-int contarPaquetesXRegion(list<Region*> &regionesMemoria){
-
-    int cantidad = 0;
-    if(!regionesMemoria.empty()){
-        for (list<Region*>::iterator itB=regionesMemoria.begin(); itB != regionesMemoria.end(); ++itB)
-            {
-                //cout<<(*itB)->getNombre() << " de "<<(*itB)->getListaPaquetes().size()<<" paquetes. "<<endl;
-                cantidad = cantidad + (*itB)->getListaPaquetes().size() + contarPaquetesXRegion((*itB)->getOficinaDirecta()->getListaRegiones());
-            }
-    }
-    return cantidad;
+int contarPaquetesXRegion(list<Region*> &regionesMemoria)
+{
+	int cantidad = 0;
+	if(!regionesMemoria.empty()){
+		for (list<Region*>::iterator itB=regionesMemoria.begin(); itB != regionesMemoria.end(); ++itB)
+		{
+			cantidad = cantidad + (*itB)->getListaPaquetes().size() + contarPaquetesXRegion((*itB)->getOficinaDirecta()->getListaRegiones());
+		}
+	}
+	return cantidad;
 }
 
-void imprimirOficinasYReguiones(list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria){
+void imprimirOficinasYReguiones(list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria)
+{
 	for (list<Oficina*>::iterator itB=oficinasMemoria.begin(); itB != oficinasMemoria.end(); ++itB)
 	{
-            cout<< "La oficina "<<(*itB)->getNombre()<<" con influencia en las regiones: "<<endl;
-            for (list<Region*>::iterator itC=(*itB)->getListaRegiones().begin(); itC != (*itB)->getListaRegiones().end(); ++itC)
-            {
-                cout<<(*itC)->getNombre() <<" con "<<(*itC)->getListaPaquetes().size()<<" paquetes."<<endl;
-
-            }
-            cout<<"--------------"<<endl;
+		cout<< "La oficina "<<(*itB)->getNombre()<<" con influencia en las regiones: "<<endl;
+		for (list<Region*>::iterator itC=(*itB)->getListaRegiones().begin(); itC != (*itB)->getListaRegiones().end(); ++itC)
+		{
+			cout<<(*itC)->getNombre() <<" con "<<(*itC)->getListaPaquetes().size()<<" paquetes."<<endl;
+		}
+		cout<<"--------------"<<endl;
 	}
-
 }
-
-
-
-

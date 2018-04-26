@@ -9,10 +9,10 @@
 
 using namespace std;
 
-void Paquete::setRemitente(Persona remitenteIn){
+void Paquete::setRemitente(Persona* remitenteIn){
     remitente = remitenteIn;
 }
-void Paquete::setDestinatario(Persona destinatarioIn){
+void Paquete::setDestinatario(Persona* destinatarioIn){
     destinatario = destinatarioIn;
 }
 void Paquete::setPeso(int pesoIn){
@@ -25,10 +25,10 @@ void Paquete::setNumGuia(string numGuiaIn){
     numGuia = numGuiaIn;
 }
 
-Persona Paquete::getRemitente( ){
+Persona* Paquete::getRemitente( ){
     return remitente;
 }
-Persona Paquete::getDestinatario( ){
+Persona* Paquete::getDestinatario( ){
     return destinatario;
 }
 int Paquete::getPeso( ){

@@ -6,6 +6,7 @@
 #include <string.h>
 #include "region.h"
 #include "paquete.h"
+
 using namespace std;
 
 
@@ -16,8 +17,8 @@ class Oficina{
 		string nombre;
 		string direccion;
 		string ciudad;
-		list<Region> listaRegiones;
-        list<Paquete> listaPaquetes;
+		list<Region*> listaRegiones;
+        list<Paquete*> listaPaquetes;
 	public:
 		//Oficina();
 		//~Oficina();
@@ -25,17 +26,17 @@ class Oficina{
         void setNombre(string nombreIn);
         void setDireccion(string DireccionIn);
         void setCiudad(string ciudadIn);
-        void setListaRegiones(list<Region> listaRegionesIn);
-        void setListaPaquetes(list<Paquete> listaPaquetesIn);
+        void setListaRegiones(list<Region*> listaRegionesIn);
+        void setListaPaquetes(list<Paquete*> listaPaquetesIn);
 
         string getCodigo( );
         string getNombre( );
         string getDireccion( );
         string getCiudad( );
-        list<Region> getListaRegiones();
-        list<Paquete> getListaPaquetes();
-        bool agregarPaquete(Paquete paqueteIn, string codigoRegionIn);
-        void agregarRegion(Region regionIn);
+        list<Region*>& getListaRegiones();
+        list<Paquete*>& getListaPaquetes();
+        bool agregarPaquete(Paquete* paqueteIn, string codigoRegionIn);
+        void agregarRegion(Region* regionIn);
 
 };
 

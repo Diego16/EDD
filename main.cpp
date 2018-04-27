@@ -80,7 +80,7 @@ int main()
 																																{
 																																								cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 																																}
-																																else if(!cargarPersonas(lineIn,listIn))
+																																else
 																																{
 																																								cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
 																																}
@@ -99,7 +99,7 @@ int main()
 																																{
 																																								cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 																																}
-																																else if(!cargarPaquetes(lineIn,listInP, listIn, listInO, listInR))
+																																else
 																																{
 																																								cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
 																																}
@@ -118,7 +118,7 @@ int main()
 																																{
 																																								cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 																																}
-																																else if(cargarRegiones(lineIn,listInO,listInR))
+																																else
 																																{
 																																								cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
 																																}
@@ -137,7 +137,7 @@ int main()
 																																{
 																																								cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 																																}
-																																else if(!cargarOficinas(lineIn,listInO))                                                                                                                                                                                                                                                //!cargarOficinas())
+																																else
 																																{
 																																								cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
 																																}
@@ -371,14 +371,14 @@ bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria, list<
 																return false;
 								}
 								myfile.close();
-								if(res==1)
-								{
-																cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
-								}
 								if(exitos==0)
 								{
 																cout<<"No se cargo ningun elemento"<<endl;
 																return false;
+								}
+								if(res==1)
+								{
+																cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
 								}
 								else if(exitos>0)
 								{
@@ -488,7 +488,7 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
 																								{
 																																paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
 																																paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-																																paqueteAux->setPeso(1);
+																																paqueteAux->setPeso(stoi(pesoIn));
 																																paqueteAux->setNumGuia(numGuiaIn);
 																																paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
 																																buscarRegion2(codigoRegionIn,buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaRegiones())->getListaPaquetes().push_back(paqueteAux);
@@ -630,7 +630,7 @@ bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
 																while((myfile.peek()!=EOF))
 																{
 																								getline (myfile,line);
-																								vtoken = tokenizador(line, '"');
+																								vtoken = tokenizador2(line, ',');
 																								if(registrarOficina(vtoken[3],vtoken[2],vtoken[1],vtoken[0],oficinasMemoria))
 																																exitos++;
 																								else
@@ -671,7 +671,7 @@ bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<
 																while((myfile.peek()!=EOF))
 																{
 																								getline (myfile,line);
-																								vtoken = tokenizador(line, '"');
+																								vtoken = tokenizador2(line, ',');
 																								if(registrarRegion(vtoken[2],vtoken[1],vtoken[0],oficinasMemoria,regionesMemoria))
 																																exitos++;
 																								else

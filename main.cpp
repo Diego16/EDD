@@ -27,7 +27,7 @@ bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria);
 bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria);
 bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, string pesoIn, string tipoContenidoIn, string numGuiaIn,
 																						string codigoOficinaIn, string nombreOficinaIn, string direccionOficinaIn
-																						,string ciudadOficinaIn, string codigoRegionIn, string nombreRegionstringIn,
+																						,string ciudadOficinaIn, string codigoRegionIn, string nombreRegionIn,
 																						list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria,list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria);
 bool registrarOficina(string codigo, string nombre, string direccion, string ciudad,list<Oficina*> &oficinasMemoria);
 bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria);
@@ -247,7 +247,7 @@ int main()
 																{
 																								if (cantCmd==1)
 																								{
-																																imprimirPaquetesXRegion(listInO,listInR,listInP);
+																																contarPaquetes(listInO);
 																								}
 																								else
 																																cout<< "Parametros invalidos"<<endl;
@@ -387,50 +387,6 @@ bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria, list<
 								}
 								return false;
 }
-vector<string> tokenizador(string stringIn, char token)
-{
-								vector<string> listOut;
-								string aux;
-								int i = 1;
-								while( i <= stringIn.size())
-								{
-																if(stringIn[i] == token)
-																{
-																								i++;
-																								listOut.insert(listOut.begin(), aux );
-																								aux.clear();
-																								i++;
-																								i++;
-																}
-																if(i <= stringIn.size())
-																{
-																								aux += stringIn[i];
-																}
-																i++;
-								}
-								return listOut;
-}
-vector<string> tokenizador2(string stringIn, char token)
-{
-								vector<string> listOut;
-								string aux;
-								int i = 0;
-								while( i <= stringIn.size())
-								{
-																if(stringIn[i] == token)
-																{
-																								i++;
-																								listOut.insert(listOut.begin(), aux );
-																								aux.clear();
-																}
-																aux += stringIn[i];
-																i++;
-								}
-								aux.resize(aux.size()-1);
-								listOut.insert(listOut.begin(), aux );
-								return listOut;
-}
-
 bool registrarPersona(string nombre, string apellido, string cedula, string direccion, string ciudad, string telefono, list<Persona*> &personasMemoria)
 {
 								if(!buscarPersona(cedula, personasMemoria))
@@ -473,7 +429,7 @@ Persona* buscarPersona2(string cedulaIn, list<Persona*> &personasMemoria)
 }
 bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, string pesoIn, string tipoContenidoIn, string numGuiaIn,
 																						string codigoOficinaIn, string nombreOficinaIn, string direccionOficinaIn
-																						,string ciudadOficinaIn, string codigoRegionIn,string nombreRegionstringIn,
+																						,string ciudadOficinaIn, string codigoRegionIn,string nombreRegionIn,
 																						list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria, list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria)
 {
 								Paquete* paqueteAux = new Paquete();
@@ -695,7 +651,7 @@ bool registrarOficina(string codigo, string nombre, string direccion, string ciu
 																oficinaAux->setNombre(nombre);
 																oficinaAux->setDireccion(direccion);
 																oficinaAux->setCiudad(ciudad);
-																oficinasMemoria.push_front(oficinaAux);
+																oficinasMemoria.push_back(oficinaAux);
 																return true;
 								}
 								return false;
@@ -706,7 +662,7 @@ bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,lis
 								Oficina* oficinaAux;
 								if(buscarOficina(codigoOficinaPadre,oficinasMemoria))
 								{
-																if(!buscarRegion( codigo, regionesMemoria))
+																if(!buscarRegion(codigo,regionesMemoria))
 																{
 																								regionAux->setCodigo(codigo);
 																								regionAux->setNombre(nombre);
@@ -715,7 +671,7 @@ bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,lis
 																								oficinaAux->getListaRegiones().push_front(regionAux);
 																								registrarOficina(codigo, nombre, oficinaAux->getDireccion(),oficinaAux->getCiudad(),oficinasMemoria);
 																								oficinaAux = buscarOficina2(codigo,oficinasMemoria);
-																								oficinaAux->getListaRegiones().push_front(regionAux);
+																								oficinaAux->getListaRegiones().push_back(regionAux);
 																								return true;
 																}
 																else
@@ -725,24 +681,30 @@ bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,lis
 }
 void contarPaquetes(list<Oficina*> &oficinasMemoria){
 
-								int suma = 0;
-								for (list<Oficina*>::iterator itB=oficinasMemoria.begin(); itB != oficinasMemoria.end(); ++itB)
+								int suma = 0, acum=0;
+								if(oficinasMemoria.size()==0)
 								{
-																cout<<"Oficina "<<(*itB)->getNombre()<<" cantidad de regiones: "<<(*itB)->getListaRegiones().size()<<endl;
-
-																for (list<Region*>::iterator itC=(*itB)->getListaRegiones().begin(); itC != (*itB)->getListaRegiones().end(); ++itC)
+																cout<<"No hay ninguna oficina registrada en el sistema"<<endl;
+								}
+								else
+								{
+																cout<<"=========================================="<<endl;
+																for (list<Oficina*>::iterator itB=oficinasMemoria.begin(); itB != oficinasMemoria.end(); ++itB)
 																{
-
-																								cout<<"Region: "<<(*itC)->getNombre() <<" con "<<(*itC)->getListaPaquetes().size()<<" paquetes."<<endl;
-																								suma += (*itC)->getListaPaquetes().size();
+																								for (list<Region*>::iterator itC=(*itB)->getListaRegiones().begin(); itC != (*itB)->getListaRegiones().end(); ++itC)
+																								{
+																																if ((*itB)->getNombre()==(*itC)->getNombre())
+																																{
+																																								cout<<(*itC)->getListaPaquetes().size()<<" paquetes en la oficina "<<(*itB)->getCodigo()<<", region de reparto "<<(*itC)->getNombre()<<endl;
+																																								suma += (*itC)->getListaPaquetes().size();
+																																								cout<<"------------------------------------------"<<endl;
+																																}
+																								}
+																								acum+=suma;
+																								suma = 0;
 																}
-																cout<< "para un total de "<< suma<< " en la oficina."<<endl;
-																cout<<"--------------"<<endl;
-																suma = 0;
-																if(!(*itB)->getListaRegiones().empty())
-																{
-
-																}
+																cout<<"=========================================="<<endl;
+																cout<<"Total paquetes en el sistema: "<<acum<<endl;
 								}
 }
 
@@ -769,4 +731,47 @@ void imprimirOficinasYReguiones(list<Oficina*> &oficinasMemoria,list<Region*> &r
 																}
 																cout<<"--------------"<<endl;
 								}
+}
+vector<string> tokenizador(string stringIn, char token)
+{
+								vector<string> listOut;
+								string aux;
+								int i = 1;
+								while( i <= stringIn.size())
+								{
+																if(stringIn[i] == token)
+																{
+																								i++;
+																								listOut.insert(listOut.begin(), aux );
+																								aux.clear();
+																								i++;
+																								i++;
+																}
+																if(i <= stringIn.size())
+																{
+																								aux += stringIn[i];
+																}
+																i++;
+								}
+								return listOut;
+}
+vector<string> tokenizador2(string stringIn, char token)
+{
+								vector<string> listOut;
+								string aux;
+								int i = 0;
+								while( i <= stringIn.size())
+								{
+																if(stringIn[i] == token)
+																{
+																								i++;
+																								listOut.insert(listOut.begin(), aux );
+																								aux.clear();
+																}
+																aux += stringIn[i];
+																i++;
+								}
+								aux.resize(aux.size()-1);
+								listOut.insert(listOut.begin(), aux );
+								return listOut;
 }

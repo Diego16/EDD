@@ -19,7 +19,6 @@
 using namespace std;
 
 bool cargarPersonas(string nombreArchivo, list<Persona*> &personasMemoria);
-vector<string> tokenizador(string stringIn, char token);
 bool buscarPersona(string cedulaIn, list<Persona*> &personasMemoria);
 bool registrarPersona(string nombre, string apellido, string cedula, string direccion, string ciudad, string telefono, list<Persona*> &personasMemoria);
 bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria,  list<Persona*> &personasMemoria,list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria);
@@ -42,7 +41,7 @@ void imprimirRegiones(list<Region*> &regionesMemoria);
 void imprimirOficinas(list<Oficina*> &oficinasMemoria);
 void imprimirPaquetesXRegion2(list<Oficina*> &oficinasMemoria);
 void imprimirPaquetesXRegion(list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria, list<Paquete*> &paquetesMemoria);
-vector<string> tokenizador2(string stringIn, char token);
+vector<string> tokenizador(string stringIn, char token);
 void contarPaquetes(list<Oficina*> &oficinasMemoria);
 int contarPaquetesXRegion(list<Region*> &regionesMemoria);
 void imprimirOficinasYReguiones(list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria);
@@ -304,7 +303,7 @@ bool cargarPersonas(string nombreArchivo, list<Persona*> &personasMemoria)
 																while((myfile.peek()!=EOF))
 																{
 																								getline (myfile,line);
-																								vtoken = tokenizador2(line, ',');
+																								vtoken = tokenizador(line, ',');
 																								if(registrarPersona(vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], personasMemoria))
 																								{
 																																exitos++;
@@ -352,7 +351,7 @@ bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria, list<
 																while((myfile.peek()!=EOF))
 																{
 																								getline (myfile,line);
-																								vtoken = tokenizador2(line, ',');
+																								vtoken = tokenizador(line, ',');
 																								if(registrarPaquete(vtoken[10],vtoken[9],vtoken[8],vtoken[7],vtoken[6],vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], paquetesMemoria, personasMemoria, oficinasMemoria, regionesMemoria))
 																								{
 																																res=res;
@@ -548,29 +547,6 @@ void imprimirPaquetesXRegion2(list<Oficina*> &oficinasMemoria)
 																(*itO)->getListaRegiones().front()->getListaPaquetes().front()->getRemitente()->getNombre()<<endl;
 								}
 }
-void imprimirPaquetesXRegion(list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria, list<Paquete*> &paquetesMemoria)
-{
-								int cantidadAcum = 0;
-								list<Region*> LRAux;
-								for (list<Region*>::iterator itR1=regionesMemoria.begin(); itR1 != regionesMemoria.end(); ++itR1)
-								{
-																for (list<Oficina*>::iterator itO = oficinasMemoria.begin(); itO != oficinasMemoria.end(); ++itO)
-																{
-																								LRAux=(*itO)->getListaRegiones();
-																								for (list<Region*>::iterator itR=LRAux.begin(); itR != LRAux.end(); ++itR)
-																								{
-																																if((*itR1)->getNombre() == (*itR)->getNombre())
-																																{
-																																								cantidadAcum += (*itR)->getListaPaquetes().size();
-																																}
-																								}
-																}
-																cout<<cantidadAcum<<" paquetes en la region de reparto "<<(*itR1)->getNombre()<<endl;
-																cantidadAcum=0;
-								}
-								cout<<" Para un total de "<<paquetesMemoria.size()<<" paquetes en el sistema"<<endl;
-}
-
 bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
 {
 								string line;
@@ -586,7 +562,7 @@ bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
 																while((myfile.peek()!=EOF))
 																{
 																								getline (myfile,line);
-																								vtoken = tokenizador2(line, ',');
+																								vtoken = tokenizador(line, ',');
 																								if(registrarOficina(vtoken[3],vtoken[2],vtoken[1],vtoken[0],oficinasMemoria))
 																																exitos++;
 																								else
@@ -627,7 +603,7 @@ bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<
 																while((myfile.peek()!=EOF))
 																{
 																								getline (myfile,line);
-																								vtoken = tokenizador2(line, ',');
+																								vtoken = tokenizador(line, ',');
 																								if(registrarRegion(vtoken[2],vtoken[1],vtoken[0],oficinasMemoria,regionesMemoria))
 																																exitos++;
 																								else
@@ -733,29 +709,6 @@ void imprimirOficinasYReguiones(list<Oficina*> &oficinasMemoria,list<Region*> &r
 								}
 }
 vector<string> tokenizador(string stringIn, char token)
-{
-								vector<string> listOut;
-								string aux;
-								int i = 1;
-								while( i <= stringIn.size())
-								{
-																if(stringIn[i] == token)
-																{
-																								i++;
-																								listOut.insert(listOut.begin(), aux );
-																								aux.clear();
-																								i++;
-																								i++;
-																}
-																if(i <= stringIn.size())
-																{
-																								aux += stringIn[i];
-																}
-																i++;
-								}
-								return listOut;
-}
-vector<string> tokenizador2(string stringIn, char token)
 {
 								vector<string> listOut;
 								string aux;

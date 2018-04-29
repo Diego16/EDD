@@ -9,56 +9,75 @@
 #include "paquete.h"
 using namespace std;
 
-void Oficina::setCodigo(string codigoIn){
-	codigo = codigoIn;
+void Oficina::setCodigo(string codigoIn)
+{
+								codigo = codigoIn;
 }
-void Oficina::setNombre(string nombreIn){
-	nombre = nombreIn;
+void Oficina::setNombre(string nombreIn)
+{
+								nombre = nombreIn;
 }
-void Oficina::setDireccion(string direccionIn){
-	direccion = direccionIn;
+void Oficina::setDireccion(string direccionIn)
+{
+								direccion = direccionIn;
 }
-void Oficina::setCiudad(string ciudadIn){
-	ciudad = ciudadIn;
+void Oficina::setCiudad(string ciudadIn)
+{
+								ciudad = ciudadIn;
 }
-void Oficina::setListaRegiones(list<Region*> listaRegionesIn){
-	listaRegiones = listaRegionesIn;
+void Oficina::setListaRegiones(list<Region*> listaRegionesIn)
+{
+								listaRegiones = listaRegionesIn;
 }
-void Oficina::setListaPaquetes(list<Paquete*> listaPaquetesIn){
-	listaPaquetes = listaPaquetesIn;
+void Oficina::setListaPaquetes(list<Paquete*> listaPaquetesIn)
+{
+								listaPaquetes = listaPaquetesIn;
 }
-string Oficina::getCodigo( ){
-	return codigo;
+void Oficina::setPrincipal(bool principalIn)
+{
+								principal=principalIn;
 }
-string Oficina::getNombre( ){
-	return nombre;
+string Oficina::getCodigo()
+{
+								return codigo;
 }
-string Oficina::getDireccion( ){
-	return direccion;
+string Oficina::getNombre()
+{
+								return nombre;
 }
-string Oficina::getCiudad( ){
-	return ciudad;
+string Oficina::getDireccion()
+{
+								return direccion;
 }
-list<Region*>& Oficina::getListaRegiones(){
-	return listaRegiones;
+string Oficina::getCiudad(){
+								return ciudad;
 }
-list<Paquete*>& Oficina::getListaPaquetes(){
-	return listaPaquetes;
+list<Region*>& Oficina::getListaRegiones()
+{
+								return listaRegiones;
+}
+list<Paquete*>& Oficina::getListaPaquetes()
+{
+								return listaPaquetes;
+}
+bool Oficina::getPrincipal()
+{
+								return principal;
 }
 void Oficina::agregarRegion(Region* regionIn)
 {
-	listaRegiones.insert(listaRegiones.begin(),regionIn);
+								listaRegiones.insert(listaRegiones.begin(),regionIn);
 }
 bool Oficina::agregarPaquete(Paquete* paqueteIn, string codigoRegionIn)
 {
-	for (list<Region*>::iterator itR=listaRegiones.begin(); itR != listaRegiones.end(); ++itR)
-	{
-		if((*itR)->getCodigo() == codigoRegionIn)
-		{
-			(*itR)->agregarPaquete(paqueteIn);
-			return true;
-		}
-	}
-	return false;
+								for (list<Region*>::iterator itR=listaRegiones.begin(); itR != listaRegiones.end(); ++itR)
+								{
+																if((*itR)->getCodigo() == codigoRegionIn)
+																{
+																								(*itR)->agregarPaquete(paqueteIn);
+																								return true;
+																}
+								}
+								return false;
 }
 #endif

@@ -18,7 +18,9 @@ class Oficina{
 		string direccion;
 		string ciudad;
 		list<Region*> listaRegiones;
-        list<Paquete*> listaPaquetes;
+    list<Paquete*> listaPaquetes;
+		bool principal;
+
 	public:
 		//Oficina();
 		//~Oficina();
@@ -28,16 +30,16 @@ class Oficina{
         void setCiudad(string ciudadIn);
         void setListaRegiones(list<Region*> listaRegionesIn);
         void setListaPaquetes(list<Paquete*> listaPaquetesIn);
-
-        string getCodigo( );
-        string getNombre( );
-        string getDireccion( );
-        string getCiudad( );
+				void setPrincipal(bool principalIn);
+        string getCodigo();
+        string getNombre();
+        string getDireccion();
+        string getCiudad();
         list<Region*>& getListaRegiones();
         list<Paquete*>& getListaPaquetes();
+				bool getPrincipal();
         bool agregarPaquete(Paquete* paqueteIn, string codigoRegionIn);
         void agregarRegion(Region* regionIn);
-
 };
 
 #include "oficina.hpp"

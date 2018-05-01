@@ -579,7 +579,7 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
 																																paqueteAux->setPeso(stoi(pesoIn));
 																																paqueteAux->setNumGuia(numGuiaIn);
 																																paqueteAux->setRegionDestino(codigoRegionIn);
-																																paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
+																																paquetesMemoria.push_back(paqueteAux);
 																																buscarRegion2(codigoOficinaIn,buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaRegiones())->getListaPaquetes().push_back(paqueteAux);
 																																buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaPaquetes().push_back(paqueteAux);
 																																return true;
@@ -595,7 +595,7 @@ bool registrarPaqueteUnico(string cedulaRemitenteIn, string cedulaDestinatarioIn
 								{
 																paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
 																paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-																paqueteAux->setPeso(1);
+																paqueteAux->setPeso(stoi(pesoIn));
 																paqueteAux->setNumGuia(numGuiaIn);
 																paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
 																return true;
@@ -815,19 +815,15 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 																{
 																								for (list<Region*>::iterator itB=buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().begin(); itB != buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().end(); ++itB)
 																								{
-																																if((*itB)->getCodigo()==buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back()->getRegionDestino())
+																																if(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty()&&((*itB)->getCodigo()==(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back()->getRegionDestino())))
 																																{
-																																								if(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
-																																								{
-
-																																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
-																																																buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
-																																								}
-																																								if(!buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().empty())
-																																								{
-																																																(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
-																																																buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
-																																								}
+																																								(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
+																																								buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
+																																}
+																																if(!buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().empty()&&((*itB)->getCodigo()==(buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().back()->getRegionDestino())))
+																																{
+																																								(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
+																																								buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
 																																}
 																								}
 																}

@@ -2,9 +2,9 @@
 #define __PAQUETE__HPP__
 
 #include <iostream>
-#include "paquete.h"
 #include <string>
 #include <list>
+#include "paquete.h"
 #include "persona.h"
 
 using namespace std;

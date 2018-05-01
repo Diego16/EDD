@@ -817,8 +817,10 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 
 																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 																																(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
-																																buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
-																																buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
+																																if(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
+																																								buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
+																																if(!buscarRegion2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
+																																								buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
 																								}
 																}
 								}

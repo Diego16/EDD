@@ -254,6 +254,48 @@ int main()
 																								else
 																																cout<< "Parametros invalidos"<<endl;
 																}
+																else if(strcmp(miLista[0],"repartirPaquetes")==0)
+																{
+																								if (cantCmd==2)
+																								{
+																																lineIn=miLista[1];
+																																distribuirPaquetes(lineIn,listInO,listInR);
+																								}
+																								else
+																																cout<< "Parametros invalidos"<<endl;
+																}
+																else if(strcmp(miLista[0],"ayuda")==0)
+																{
+																								if (cantCmd==1)
+																								{
+																																cout<<endl<<"Comandos disponibles: "<<endl<<"   cargarPersonas"<<endl<<"   cargarPaquetes"<<endl<<"   cargarRegiones"<<endl<<"   cargarOficinas"<<endl<<"   registrarPersona"<<endl<<"   registrarPaquete"<<endl<<"   registrarOficina"<<endl<<"   registrarRegion"<<endl<<"   conteoPaquetes"<<endl<<"   repartirPaquetes"<<endl<<"   salir"<<endl;
+																								}
+																								else if (cantCmd==2) {
+																																lineIn=miLista[1];
+																																if(lineIn=="cargarPersonas")
+																																								cout<<"===cargarPersonas <nombre_archivo>"<<endl<<"====Carga en memoria la información de las personas contenida en el archivo identificado por nombre_archivo"<<endl;
+																																if(lineIn=="cargarPaquetes")
+																																								cout<<"===cargarPaquetes <nombre_archivo>"<<endl<<"====Carga en memoria la información de los paquetes contenida en el archivo identificado por nombre_archivo"<<endl;
+																																if(lineIn=="cargarPaquetes")
+																																								cout<<"===cargarOficinas <nombre_archivo>"<<endl<<"====Carga en memoria la información de las oficinas contenida en el archivo identificado por nombre_archivo"<<endl;
+																																if(lineIn=="cargarRegiones")
+																																								cout<<"===cargarRegiones <nombre_archivo>"<<endl<<"====Carga en memoria la información de las regiones contenida en el archivo identificado por nombre_archivo"<<endl;
+																																if(lineIn=="registrarPersona")
+																																								cout<<"===registrarPersona"<<endl<<"====Permite insertar en el sistema la información asociada de una persona."<<endl;
+																																if(lineIn=="registrarPaquete")
+																																								cout<<"===registrarPaquete"<<endl<<"====Permite insertar en el sistema un paquete a entregar con toda su información asociada"<<endl;
+																																if(lineIn=="registrarOficina")
+																																								cout<<"===registrarOficina"<<endl<<"====Permite insertar en el sistema una oficina con toda su información asociada"<<endl;
+																																if(lineIn=="registrarRegion")
+																																								cout<<"===registrarRegion"<<endl<<"====Permite insertar en el sistema una region con toda su información asociada"<<endl;
+																																if(lineIn=="conteoPaquetes")
+																																								cout<<"===conteoPaquetes"<<endl<<"====Realiza el conteo de los paquetes registrados en que se encuentran pendientes por entregar"<<endl;
+																																if(lineIn=="repartirPaquetes")
+																																								cout<<"===repartirPaquetes <codigo_oficina>"<<endl<<"====Utilizando la información de la jerarquía de oficinas, el comando distribuye los paquetes almacenados en las regiones de reparto de la oficina dada y los ubica en las oficinas respectivas, distribuyéndolos de forma equitativa en las regiones de reparto de las oficinas dependientes."<<endl;
+																																if(lineIn=="salir")
+																																								cout<<"===salir"<<endl<<"====Termina la ejecucion de la aplicacion."<<endl;
+																								}
+																}
 																else if(strcmp(miLista[0],"ayuda")==0)
 																{
 																								if (cantCmd==1)

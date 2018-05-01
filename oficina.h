@@ -18,12 +18,13 @@ class Oficina{
 		string direccion;
 		string ciudad;
 		list<Region*> listaRegiones;
-    list<Paquete*> listaPaquetes;
+
 		bool principal;
 
 	public:
 		//Oficina();
 		//~Oficina();
+		list<Paquete*> listaPaquetes;
         void setCodigo(string codigoIn);
         void setNombre(string nombreIn);
         void setDireccion(string DireccionIn);

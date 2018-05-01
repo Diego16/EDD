@@ -46,7 +46,6 @@ vector<string> tokenizador(string stringIn, char token);
 void contarPaquetes(list<Oficina*> &oficinasMemoria);
 int contarPaquetesXRegion(list<Region*> &regionesMemoria);
 void imprimirOficinasYReguiones(list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria);
-void distribuirPaquetes( string codigoOficina,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria);
 
 int main()
 {
@@ -254,22 +253,11 @@ int main()
 																								else
 																																cout<< "Parametros invalidos"<<endl;
 																}
-																else if(strcmp(miLista[0],"repartirPaquetes")==0)
-																{
-																								if (cantCmd==2)
-																								{
-																																lineIn=miLista[1];
-																																distribuirPaquetes(lineIn,listInO,listInR);
-																								}
-																								else
-																																cout<< "Parametros invalidos"<<endl;
-																}
-
 																else if(strcmp(miLista[0],"ayuda")==0)
 																{
 																								if (cantCmd==1)
 																								{
-																																cout<<endl<<"Comandos disponibles: "<<endl<<"   cargarPersonas"<<endl<<"   cargarPaquetes"<<endl<<"   cargarRegiones"<<endl<<"   cargarOficinas"<<endl<<"   registrarPersona"<<endl<<"   registrarPaquete"<<endl<<"   registrarOficina"<<endl<<"   registrarRegion"<<endl<<"   conteoPaquetes"<<endl<<"   repartirPaquetes"<<endl<<"   salir"<<endl;
+																																cout<<endl<<"Comandos disponibles: "<<endl<<"   cargarPersonas"<<endl<<"   cargarPaquetes"<<endl<<"   cargarRegiones"<<endl<<"   cargarOficinas"<<endl<<"   registrarPersona"<<endl<<"   registrarPaquete"<<endl<<"   registrarOficina"<<endl<<"   registrarRegion"<<endl<<"   conteoPaquetes"<<endl<<"   salir"<<endl;
 																								}
 																								else if (cantCmd==2) {
 																																lineIn=miLista[1];
@@ -291,8 +279,6 @@ int main()
 																																								cout<<"===registrarRegion"<<endl<<"====Permite insertar en el sistema una region con toda su información asociada"<<endl;
 																																if(lineIn=="conteoPaquetes")
 																																								cout<<"===conteoPaquetes"<<endl<<"====Realiza el conteo de los paquetes registrados en que se encuentran pendientes por entregar"<<endl;
-																																if(lineIn=="repartirPaquetes")
-																																								cout<<"===repartirPaquetes <codigo_oficina>"<<endl<<"====Utilizando la información de la jerarquía de oficinas, el comando distribuye los paquetes almacenados en las regiones de reparto de la oficina dada y los ubica en las oficinas respectivas, distribuyéndolos de forma equitativa en las regiones de reparto de las oficinas dependientes."<<endl;
 																																if(lineIn=="salir")
 																																								cout<<"===salir"<<endl<<"====Termina la ejecucion de la aplicacion."<<endl;
 																								}
@@ -468,21 +454,10 @@ bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<
 								else
 																return false;
 								myfile.close();
+								cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
 								if(res==1)
-								{
 																cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
-								}
-								if(exitos==0)
-								{
-																cout<<"No se cargo ningun elemento"<<endl;
-																return false;
-								}
-								else if(exitos>0)
-								{
-																cout<<"Se cargaron exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
-																return true;
-								}
-								return false;
+								return true;
 }
 bool registrarPersona(string nombre, string apellido, string cedula, string direccion, string ciudad, string telefono, list<Persona*> &personasMemoria)
 {
@@ -574,7 +549,7 @@ bool registrarPaqueteUnico(string cedulaRemitenteIn, string cedulaDestinatarioIn
 								{
 																paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
 																paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-																paqueteAux->setPeso(stoi(pesoIn));
+																paqueteAux->setPeso(1);
 																paqueteAux->setNumGuia(numGuiaIn);
 																paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
 																return true;
@@ -785,32 +760,4 @@ int contarPaquetesXRegion(list<Region*> &regionesMemoria)
 																}
 								}
 								return cantidad;
-}
-
-
-void distribuirPaquetes( string codigoOficina,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria){
-
-								Oficina* oficinaAux;
-								Region* regionAux;
-								list<Paquete*> listaPaquetesAux;
-								list<Region*> listaRegionesAux;
-								if(buscarOficina(codigoOficina,oficinasMemoria))
-								{
-																oficinaAux = buscarOficina2(codigoOficina,oficinasMemoria);
-																regionAux = buscarRegion2(codigoOficina,regionesMemoria);
-																listaPaquetesAux = oficinaAux->getListaPaquetes();
-																listaRegionesAux = oficinaAux->getListaRegiones();
-																while(!oficinaAux->getListaPaquetes().empty())
-																{
-																								for (list<Region*>::iterator itB=listaRegionesAux.begin(); itB != listaRegionesAux.end(); ++itB)
-																								{
-																																cout<<"antes "<<(*itB)->getOficinaDirecta()->getListaPaquetes().size()<<" "<<(*itB)->getListaPaquetes().size()<<endl;
-																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
-																																(*itB)->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
-																																cout<<"despues "<<(*itB)->getOficinaDirecta()->getListaPaquetes().size()<<" "<<(*itB)->getListaPaquetes().size()<<endl;
-																																oficinaAux->getListaPaquetes().pop_back();
-																																regionAux->getListaPaquetes().pop_back();
-																								}
-																}
-								}
 }

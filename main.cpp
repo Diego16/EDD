@@ -820,10 +820,8 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 																{
 																								for (list<Region*>::iterator itB=listaRegionesAux.begin(); itB != listaRegionesAux.end(); ++itB)
 																								{
-																																cout<<"antes "<<(*itB)->getOficinaDirecta()->getListaPaquetes().size()<<" "<<(*itB)->getListaPaquetes().size()<<endl;
 																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
 																																(*itB)->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
-																																cout<<"despues "<<(*itB)->getOficinaDirecta()->getListaPaquetes().size()<<" "<<(*itB)->getListaPaquetes().size()<<endl;
 																																oficinaAux->getListaPaquetes().pop_back();
 																																regionAux->getListaPaquetes().pop_back();
 																								}

@@ -24,7 +24,10 @@ void Paquete::setTipo(string tipoIn){
 void Paquete::setNumGuia(string numGuiaIn){
     numGuia = numGuiaIn;
 }
-
+void Paquete::setRegionDestino(string codigoRegionIn)
+{
+  regionDestino = codigoRegionIn;
+}
 Persona* Paquete::getRemitente( ){
     return remitente;
 }
@@ -39,5 +42,9 @@ string Paquete::getTipo( ){
 }
 string Paquete::getNumGuia(){
     return numGuia;
+}
+string Paquete::getRegionDestino()
+{
+  return regionDestino;
 }
 #endif

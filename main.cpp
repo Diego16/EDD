@@ -578,6 +578,7 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
 																																paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
 																																paqueteAux->setPeso(stoi(pesoIn));
 																																paqueteAux->setNumGuia(numGuiaIn);
+																																paqueteAux->setRegionDestino(codigoRegionIn);
 																																paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
 																																buscarRegion2(codigoOficinaIn,buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaRegiones())->getListaPaquetes().push_back(paqueteAux);
 																																buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaPaquetes().push_back(paqueteAux);
@@ -814,15 +815,19 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 																{
 																								for (list<Region*>::iterator itB=buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().begin(); itB != buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().end(); ++itB)
 																								{
-																																if(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
+																																if((*itB)->getCodigo()==buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back()->getRegionDestino())
 																																{
-																																								(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
-																																								buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
-																																}
-																																if(!buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().empty())
-																																{
-																																								(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
-																																								buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
+																																								if(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
+																																								{
+
+																																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
+																																																buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
+																																								}
+																																								if(!buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().empty())
+																																								{
+																																																(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
+																																																buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
+																																								}
 																																}
 																								}
 																}

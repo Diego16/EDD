@@ -14,6 +14,7 @@ class Paquete{
 		int peso;
 		string tipo;
 		string numGuia;
+		string regionDestino;
 
 	public:
 		//Paquete();
@@ -23,16 +24,16 @@ class Paquete{
         void setPeso(int pesoIn);
         void setNumGuia(string numGuiaIn);
         void setTipo(string tipoIn);
-
+				void setRegionDestino(string codigoRegionIn);
         Persona* getRemitente( );
         Persona* getDestinatario( );
         int getPeso( );
         string getTipo( );
         string getNumGuia();
+				string getRegionDestino();
 
 
 };
 
 #include "paquete.hpp"
 #endif
-

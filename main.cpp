@@ -806,19 +806,15 @@ int contarPaquetesXRegion(list<Region*> &regionesMemoria)
 }
 void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria)
 {
-								Oficina* oficinaAux;
-								Region* regionAux;
-								list<Paquete*> listaPaquetesAux;
-								list<Region*> listaRegionesAux;
 								if(buscarOficina(codigoOficina,oficinasMemoria))
 								{
 																while(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
 																{
-																								for (list<Region*>::iterator itB=oficinaAux->getListaRegiones().begin(); itB != oficinaAux->getListaRegiones().end(); ++itB)
+																								for (list<Region*>::iterator itB=buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().begin(); itB != buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().end(); ++itB)
 																								{
 
-																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
-																																(*itB)->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
+																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
+																																(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 																																buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
 																																buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
 																								}

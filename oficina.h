@@ -37,7 +37,7 @@ class Oficina{
         string getCiudad();
         list<Region*>& getListaRegiones();
         list<Paquete*>& getListaPaquetes();
-				bool getPrincipal();
+        bool getPrincipal();
         bool agregarPaquete(Paquete* paqueteIn, string codigoRegionIn);
         void agregarRegion(Region* regionIn);
 };

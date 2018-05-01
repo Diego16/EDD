@@ -37,6 +37,7 @@ bool buscarOficina(string codigo, list<Oficina*> &oficinasMemoria);
 bool buscarRegion(string codigo, list<Region*> &regionesMemoria);
 Oficina* buscarOficina2(string codigo, list<Oficina*> &oficinasMemoria);
 Region* buscarRegion2(string codigo, list<Region*> &regionesMemoria);
+void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria);
 void imprimirRegiones(list<Region*> &regionesMemoria);
 void imprimirOficinas(list<Oficina*> &oficinasMemoria);
 void imprimirPaquetesXRegion2(list<Oficina*> &oficinasMemoria);
@@ -760,4 +761,30 @@ int contarPaquetesXRegion(list<Region*> &regionesMemoria)
 																}
 								}
 								return cantidad;
+}
+void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria)
+{
+								Oficina* oficinaAux;
+								Region* regionAux;
+								list<Paquete*> listaPaquetesAux;
+								list<Region*> listaRegionesAux;
+								if(buscarOficina(codigoOficina,oficinasMemoria))
+								{
+																oficinaAux = buscarOficina2(codigoOficina,oficinasMemoria);
+																regionAux = buscarRegion2(codigoOficina,regionesMemoria);
+																listaPaquetesAux = oficinaAux->getListaPaquetes();
+																listaRegionesAux = oficinaAux->getListaRegiones();
+																while(!oficinaAux->getListaPaquetes().empty())
+																{
+																								for (list<Region*>::iterator itB=listaRegionesAux.begin(); itB != listaRegionesAux.end(); ++itB)
+																								{
+																																cout<<"antes "<<(*itB)->getOficinaDirecta()->getListaPaquetes().size()<<" "<<(*itB)->getListaPaquetes().size()<<endl;
+																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
+																																(*itB)->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
+																																cout<<"despues "<<(*itB)->getOficinaDirecta()->getListaPaquetes().size()<<" "<<(*itB)->getListaPaquetes().size()<<endl;
+																																oficinaAux->getListaPaquetes().pop_back();
+																																regionAux->getListaPaquetes().pop_back();
+																								}
+																}
+								}
 }

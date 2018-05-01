@@ -531,6 +531,7 @@ bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,lis
 																								regionAux->setOficinaDirecta(oficinaAux);
 																								regionesMemoria.push_back(regionAux);
 																								oficinaAux->getListaRegiones().push_back(regionAux);
+																								registrarOficina(codigo, nombre, oficinaAux->getDireccion(),oficinaAux->getCiudad(),oficinasMemoria);
 																								oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
 																								oficinaAux->getListaRegiones().push_back(regionAux);
 																								return true;

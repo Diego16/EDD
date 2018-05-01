@@ -814,13 +814,16 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 																{
 																								for (list<Region*>::iterator itB=buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().begin(); itB != buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().end(); ++itB)
 																								{
-
-																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
-																																(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 																																if(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
+																																{
+																																								(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 																																								buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
+																																}
 																																if(!buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().empty())
+																																{
+																																								(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 																																								buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
+																																}
 																								}
 																}
 								}

@@ -812,18 +812,15 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 								list<Region*> listaRegionesAux;
 								if(buscarOficina(codigoOficina,oficinasMemoria))
 								{
-																oficinaAux = buscarOficina2(codigoOficina,oficinasMemoria);
-																regionAux = buscarRegion2(codigoOficina,regionesMemoria);
-																listaPaquetesAux = oficinaAux->getListaPaquetes();
-																listaRegionesAux = oficinaAux->getListaRegiones();
-																while(!oficinaAux->getListaPaquetes().empty())
+																while(!buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().empty())
 																{
-																								for (list<Region*>::iterator itB=listaRegionesAux.begin(); itB != listaRegionesAux.end(); ++itB)
+																								for (list<Region*>::iterator itB=oficinaAux->getListaRegiones().begin(); itB != oficinaAux->getListaRegiones().end(); ++itB)
 																								{
+
 																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
 																																(*itB)->getListaPaquetes().push_back(oficinaAux->getListaPaquetes().back());
-																																oficinaAux->getListaPaquetes().pop_back();
-																																regionAux->getListaPaquetes().pop_back();
+																																buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
+																																buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
 																								}
 																}
 								}

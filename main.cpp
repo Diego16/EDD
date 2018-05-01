@@ -545,10 +545,12 @@ bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,lis
 																								regionAux->setCodigo(codigo);
 																								regionAux->setNombre(nombre);
 																								oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
-																								regionesMemoria.push_back(regionAux);
-																								oficinaAux->getListaRegiones().push_back(regionAux);
 																								registrarOficina(codigo, nombre, oficinaAux->getDireccion(),oficinaAux->getCiudad(),oficinasMemoria);
 																								oficinaAux = buscarOficina2(codigo,oficinasMemoria);
+																								regionAux->setOficinaDirecta(oficinaAux);
+																								regionesMemoria.push_back(regionAux);
+																								oficinaAux->getListaRegiones().push_back(regionAux);
+																								oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
 																								oficinaAux->getListaRegiones().push_back(regionAux);
 																								return true;
 																}
@@ -813,7 +815,7 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 																								for (list<Region*>::iterator itB=buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().begin(); itB != buscarOficina2(codigoOficina,oficinasMemoria)->getListaRegiones().end(); ++itB)
 																								{
 
-																																(*itB)->getOficinaDirecta()->listaPaquetes.push_back(buscarOficina2(codigoOficina,oficinasMemoria)->listaPaquetes.back());
+																																(*itB)->getOficinaDirecta()->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 																																(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 																																buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().pop_back();
 																																buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();

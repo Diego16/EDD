@@ -524,15 +524,13 @@ bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,lis
 								{
 																if(!buscarRegion(codigo,regionesMemoria))
 																{
-
 																								regionAux->setCodigo(codigo);
 																								regionAux->setNombre(nombre);
-																								oficinaAux = buscarOficina2(codigo,oficinasMemoria);
-																								regionAux->setOficinaDirecta(oficinaAux);
+																								oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
 																								regionesMemoria.push_back(regionAux);
 																								oficinaAux->getListaRegiones().push_back(regionAux);
 																								registrarOficina(codigo, nombre, oficinaAux->getDireccion(),oficinaAux->getCiudad(),oficinasMemoria);
-																								oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
+																								oficinaAux = buscarOficina2(codigo,oficinasMemoria);
 																								oficinaAux->getListaRegiones().push_back(regionAux);
 																								return true;
 																}

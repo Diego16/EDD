@@ -116,7 +116,7 @@ int main()
 			if (cantCmd==2)
 			{
 				lineIn=miLista[1];
-				if(cargarRegiones(lineIn,listInO,listInR))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //cargarRegiones())
+				if(cargarRegiones(lineIn,listInO,listInR))
 				{
 					cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 					encontrarPrincipal(listInO,listInR);
@@ -136,7 +136,7 @@ int main()
 			if (cantCmd==2)
 			{
 				lineIn=miLista[1];
-				if(cargarOficinas(lineIn,listInO))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //cargarOficinas())
+				if(cargarOficinas(lineIn,listInO))
 				{
 					cout<<"La información desde el archivo "<<lineIn<<" ha sido cargada exitosamente"<<endl;
 				}
@@ -150,21 +150,22 @@ int main()
 				cout<< "Parametros invalidos"<<endl;
 			}
 		}
-
 		else if(strcmp(miLista[0],"registrarPersona")==0)
 		{
-
 			if (cantCmd==1)
 			{
 				string nombre,apellido,cedula,direccion,ciudad,telefono;
 				cout<<"Nombre: ";
-				cin>>nombre;
+				cin.ignore();
+				getline(cin,nombre);
 				cout<<"Apellido: ";
-				cin>>apellido;
+				cin.ignore();
+				getline(cin,apellido);
 				cout<<"Cedula: ";
 				cin>>cedula;
 				cout<<"Direccion: ";
-				cin>>direccion;
+				cin.ignore();
+				getline(cin,direccion);
 				cout<<"Telefono: ";
 				cin>>telefono;
 				if(registrarPersona(nombre,apellido,cedula,direccion,ciudad,telefono,listIn))
@@ -189,7 +190,8 @@ int main()
 				cout<<"Peso: ";
 				cin>>peso;
 				cout<<"Tipo de contenido: ";
-				cin>>tipoContenido;
+				cin.ignore();
+				getline(cin,tipoContenido);
 				cout<<"Numero de guia: ";
 				cin>>numGuia;
 				if(registrarPaqueteUnico(cedulaRemitente,cedulaDestinatario,peso,tipoContenido,numGuia,listInP,listIn))
@@ -210,7 +212,8 @@ int main()
 				cout<<"Codigo de la region: ";
 				cin>>codReg;
 				cout<<"Nombre de la region: ";
-				cin>>nombre;
+				cin.ignore();
+				getline(cin,nombre);
 				cout<<"Codigo oficina: ";
 				cin>>codigoOficinaPadre;
 				if(registrarRegion(codReg, nombre, codigoOficinaPadre,listInO,listInR))
@@ -231,11 +234,14 @@ int main()
 				cout<<"Codigo oficina: ";
 				cin>>codOfi;
 				cout<<"Nombre oficina: ";
-				cin>>nombre;
+				cin.ignore();
+				getline(cin,nombre);
 				cout<<"Direccion: ";
-				cin>>direccion;
+				cin.ignore();
+				getline(cin,direccion);
 				cout<<"Ciudad: ";
-				cin>>ciudad;
+				cin.ignore();
+				getline(cin,ciudad);
 				if(registrarOficina(codOfi,nombre,direccion,ciudad,listInO))
 					cout<<"La oficina identificada con el codigo "<<codOfi<<" ha sido registrada exitosamente"<<endl;
 				else

@@ -8,40 +8,40 @@
 using namespace std;
 
 void Persona::setCedula(string cedulaIn){
-    cedula = cedulaIn;
+	cedula = cedulaIn;
 }
 void Persona::setDireccion(string direccionIn){
-    direccion = direccionIn;
+	direccion = direccionIn;
 }
 void Persona::setCiudad(string ciudadIn){
-    ciudad = ciudadIn;
+	ciudad = ciudadIn;
 }
 void Persona::setTelefono( string telefonoIn){
-    telefono =  telefonoIn;
+	telefono =  telefonoIn;
 }
 void Persona::setNombre(string nombreIn){
-    nombre = nombreIn;
+	nombre = nombreIn;
 }
 void Persona::setApellido(string apellidoIn){
-    apellido = apellidoIn;
+	apellido = apellidoIn;
 }
 string Persona::getDireccion( ){
-    return direccion;
+	return direccion;
 }
 string Persona::getCiudad( ){
-    return ciudad;
+	return ciudad;
 }
 string Persona::getTelefono (){
-    return telefono;
+	return telefono;
 }
 string Persona::getNombre( ){
-    return nombre;
+	return nombre;
 }
 string Persona::getApellido(){
-    return apellido;
+	return apellido;
 }
 string Persona::getCedula( ){
-    return cedula;
+	return cedula;
 }
 
 #endif

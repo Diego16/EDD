@@ -10,33 +10,31 @@
 using namespace std;
 
 void Region::setCodigo(string codigoIn){
-    codigo = codigoIn;
+	codigo = codigoIn;
 }
 void Region::setNombre(string nombreIn){
-    nombre = nombreIn;
+	nombre = nombreIn;
 }
-
-
 string Region::getCodigo( ){
-    return codigo;
+	return codigo;
 }
 string Region::getNombre( ){
-    return nombre;
+	return nombre;
 }
 void Region::setListaPaquetes(list<Paquete*> listaPaquetesIn){
-    listaPaquetes = listaPaquetesIn;
+	listaPaquetes = listaPaquetesIn;
 }
 list<Paquete*>& Region::getListaPaquetes(){
-    return listaPaquetes;
+	return listaPaquetes;
 }
 bool Region::agregarPaquete(Paquete* paqueteIn){
-    listaPaquetes.insert(listaPaquetes.begin(), paqueteIn);
-    return true;
+	listaPaquetes.insert(listaPaquetes.begin(), paqueteIn);
+	return true;
 }
 void Region::setOficinaDirecta(Oficina* oficinaIn){
-    oficinaDirecta = oficinaIn;
+	oficinaDirecta = oficinaIn;
 }
 Oficina* Region::getOficinaDirecta(){
-    return oficinaDirecta;
+	return oficinaDirecta;
 }
 #endif // __REGION__HPP__

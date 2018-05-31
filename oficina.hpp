@@ -11,73 +11,73 @@ using namespace std;
 
 void Oficina::setCodigo(string codigoIn)
 {
-								codigo = codigoIn;
+	codigo = codigoIn;
 }
 void Oficina::setNombre(string nombreIn)
 {
-								nombre = nombreIn;
+	nombre = nombreIn;
 }
 void Oficina::setDireccion(string direccionIn)
 {
-								direccion = direccionIn;
+	direccion = direccionIn;
 }
 void Oficina::setCiudad(string ciudadIn)
 {
-								ciudad = ciudadIn;
+	ciudad = ciudadIn;
 }
 void Oficina::setListaRegiones(list<Region*> listaRegionesIn)
 {
-								listaRegiones = listaRegionesIn;
+	listaRegiones = listaRegionesIn;
 }
 void Oficina::setListaPaquetes(list<Paquete*> listaPaquetesIn)
 {
-								listaPaquetes = listaPaquetesIn;
+	listaPaquetes = listaPaquetesIn;
 }
 void Oficina::setPrincipal(bool principalIn)
 {
-								principal=principalIn;
+	principal=principalIn;
 }
 string Oficina::getCodigo()
 {
-								return codigo;
+	return codigo;
 }
 string Oficina::getNombre()
 {
-								return nombre;
+	return nombre;
 }
 string Oficina::getDireccion()
 {
-								return direccion;
+	return direccion;
 }
 string Oficina::getCiudad(){
-								return ciudad;
+	return ciudad;
 }
 list<Region*>& Oficina::getListaRegiones()
 {
-								return listaRegiones;
+	return listaRegiones;
 }
 list<Paquete*>& Oficina::getListaPaquetes()
 {
-								return listaPaquetes;
+	return listaPaquetes;
 }
 bool Oficina::getPrincipal()
 {
-								return principal;
+	return principal;
 }
 void Oficina::agregarRegion(Region* regionIn)
 {
-								listaRegiones.insert(listaRegiones.begin(),regionIn);
+	listaRegiones.insert(listaRegiones.begin(),regionIn);
 }
 bool Oficina::agregarPaquete(Paquete* paqueteIn, string codigoRegionIn)
 {
-								for (list<Region*>::iterator itR=listaRegiones.begin(); itR != listaRegiones.end(); ++itR)
-								{
-																if((*itR)->getCodigo() == codigoRegionIn)
-																{
-																								(*itR)->agregarPaquete(paqueteIn);
-																								return true;
-																}
-								}
-								return false;
+	for (list<Region*>::iterator itR=listaRegiones.begin(); itR != listaRegiones.end(); ++itR)
+	{
+		if((*itR)->getCodigo() == codigoRegionIn)
+		{
+			(*itR)->agregarPaquete(paqueteIn);
+			return true;
+		}
+	}
+	return false;
 }
 #endif

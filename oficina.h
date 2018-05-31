@@ -10,36 +10,36 @@
 using namespace std;
 
 
-class Oficina{
+class Oficina {
 
-	private:
-		string codigo;
-		string nombre;
-		string direccion;
-		string ciudad;
-		list<Region*> listaRegiones;
-    list<Paquete*> listaPaquetes;
-		bool principal;
+private:
+string codigo;
+string nombre;
+string direccion;
+string ciudad;
+list<Region*> listaRegiones;
+list<Paquete*> listaPaquetes;
+bool principal;
 
-	public:
-		//Oficina();
-		//~Oficina();
-        void setCodigo(string codigoIn);
-        void setNombre(string nombreIn);
-        void setDireccion(string DireccionIn);
-        void setCiudad(string ciudadIn);
-        void setListaRegiones(list<Region*> listaRegionesIn);
-        void setListaPaquetes(list<Paquete*> listaPaquetesIn);
-				void setPrincipal(bool principalIn);
-        string getCodigo();
-        string getNombre();
-        string getDireccion();
-        string getCiudad();
-        list<Region*>& getListaRegiones();
-        list<Paquete*>& getListaPaquetes();
-        bool getPrincipal();
-        bool agregarPaquete(Paquete* paqueteIn, string codigoRegionIn);
-        void agregarRegion(Region* regionIn);
+public:
+//Oficina();
+//~Oficina();
+void setCodigo(string codigoIn);
+void setNombre(string nombreIn);
+void setDireccion(string DireccionIn);
+void setCiudad(string ciudadIn);
+void setListaRegiones(list<Region*> listaRegionesIn);
+void setListaPaquetes(list<Paquete*> listaPaquetesIn);
+void setPrincipal(bool principalIn);
+string getCodigo();
+string getNombre();
+string getDireccion();
+string getCiudad();
+list<Region*>& getListaRegiones();
+list<Paquete*>& getListaPaquetes();
+bool getPrincipal();
+bool agregarPaquete(Paquete* paqueteIn, string codigoRegionIn);
+void agregarRegion(Region* regionIn);
 };
 
 #include "oficina.hpp"

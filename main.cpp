@@ -127,11 +127,6 @@ int main()
 				{
 					cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
 				}
-				cout<<listInR.size()<<endl;
-				for(list<Region*>::iterator itC=listInR.begin(); itC != listInR.end(); ++itC)
-				{
-					cout<<(*itC)->getCodigo()<<endl;
-				}
 			}
 			else
 			{
@@ -341,7 +336,7 @@ int main()
 		{
 			if (cantCmd==1)
 			{
-				cout<<endl<<"Comandos disponibles: "<<endl<<"   cargarPersonas"<<endl<<"   cargarPaquetes"<<endl<<"   cargarRegiones"<<endl<<"   cargarOficinas"<<endl<<"   registrarPersona"<<endl<<"   registrarPaquete"<<endl<<"   registrarOficina"<<endl<<"   registrarRegion"<<endl<<"   conteoPaquetes"<<endl<<"   salir"<<endl;
+				cout<<endl<<"Comandos disponibles: "<<endl<<"   cargarPersonas"<<endl<<"   cargarPaquetes"<<endl<<"   cargarRegiones"<<endl<<"   cargarOficinas"<<endl<<"   cargarConexiones"<<endl<<"   registrarPersona"<<endl<<"   registrarPaquete"<<endl<<"   registrarOficina"<<endl<<"   registrarRegion"<<endl<<"   conteoPaquetes"<<endl<<"   salir"<<endl;
 			}
 			else if (cantCmd==2) {
 				lineIn=miLista[1];
@@ -353,6 +348,8 @@ int main()
 					cout<<"===cargarOficinas <nombre_archivo>"<<endl<<"====Carga en memoria la información de las oficinas contenida en el archivo identificado por nombre_archivo"<<endl;
 				if(lineIn=="cargarRegiones")
 					cout<<"===cargarRegiones <nombre_archivo>"<<endl<<"====Carga en memoria la información de las regiones contenida en el archivo identificado por nombre_archivo"<<endl;
+				if(lineIn=="cargarConexiones")
+					cout<<"===cargarConexiones <nombre_archivo>"<<endl<<"====Carga en memoria la información de las conexiones entre ciudades contenida en el archivo identificado por nombre_archivo"<<endl;
 				if(lineIn=="registrarPersona")
 					cout<<"===registrarPersona"<<endl<<"====Permite insertar en el sistema la información asociada de una persona."<<endl;
 				if(lineIn=="registrarPaquete")
@@ -370,7 +367,7 @@ int main()
 		else if(strcmp(miLista[0],"salir")==0)
 			on = false;
 		else
-			cout<<"===Comando no valido"<<endl;
+			cout<<"*****Comando no valido****"<<endl;
 	}
 	return 0;
 }
@@ -724,12 +721,6 @@ void contarPaquetes(list<Oficina*> &oficinasMemoria)
 		cout<<"=========================================="<<endl;
 		for (list<Oficina*>::iterator itB=oficinasMemoria.begin(); itB != oficinasMemoria.end(); ++itB)
 		{
-			if((*itB)->getPrincipal())
-			{
-				cout<<(*itB)->getListaPaquetes().size()<<" paquetes en la oficina "<<(*itB)->getCodigo()<<", Oficina principal"<<endl;
-				suma += (*itB)->getListaPaquetes().size();
-				cout<<"------------------------------------------"<<endl;
-			}
 			for (list<Region*>::iterator itC=(*itB)->getListaRegiones().begin(); itC != (*itB)->getListaRegiones().end(); ++itC)
 			{
 				if ((*itB)->getNombre()==(*itC)->getNombre())

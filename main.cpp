@@ -49,6 +49,15 @@ vector<string> tokenizador(string stringIn, char token);
 void contarPaquetes(list<Oficina*> &oficinasMemoria);
 int contarPaquetesXRegion(list<Region*> &regionesMemoria);
 void imprimirOficinasYReguiones(list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria);
+int sacarIndice(string codigoOficina,Grafo<Oficina*> &grafo);
+NodoGrafo<Oficina*>* buscarVertice2( string codigoOficina,Grafo<Oficina*> &grafo);
+NodoGrafo<Oficina*>* buscarVertice( int vertice,Grafo<Oficina*> &grafo);
+int minimo(double distancia[], int cantidad);
+bool vistosTodos(bool vistos[], int cantidad);
+bool siConecta(string oficinaOrigen, string oficinaDestino, Grafo<Oficina*> &grafo,list<Oficina*> &oficinasMemoria);
+void rutaMasCorta(string oficinaOrigen, string oficinaDestino,  Grafo<Oficina*> &grafo,list<Oficina*> &oficinasMemoria);
+
+typedef pair<NodoGrafo<Oficina*>*,double> par;
 
 int main()
 {
@@ -338,7 +347,8 @@ int main()
 			{
 				cout<<endl<<"Comandos disponibles: "<<endl<<"   cargarPersonas"<<endl<<"   cargarPaquetes"<<endl<<"   cargarRegiones"<<endl<<"   cargarOficinas"<<endl<<"   cargarConexiones"<<endl<<"   registrarPersona"<<endl<<"   registrarPaquete"<<endl<<"   registrarOficina"<<endl<<"   registrarRegion"<<endl<<"   conteoPaquetes"<<endl<<"   salir"<<endl;
 			}
-			else if (cantCmd==2) {
+			else if (cantCmd==2)
+			{
 				lineIn=miLista[1];
 				if(lineIn=="cargarPersonas")
 					cout<<"===cargarPersonas <nombre_archivo>"<<endl<<"====Carga en memoria la información de las personas contenida en el archivo identificado por nombre_archivo"<<endl;
@@ -706,7 +716,8 @@ bool registrarPaquete2(string cedulaRemitenteIn, string cedulaDestinatarioIn, st
 	}
 	return false;
 }
-void contarPaquetes(list<Oficina*> &oficinasMemoria){
+void contarPaquetes(list<Oficina*> &oficinasMemoria)
+{
 
 	int suma = 0, acum=0;
 	if(oficinasMemoria.size()==0)
@@ -938,4 +949,130 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 		else
 			cout<<"La oficina "<<codigoOficina<<" no tiene regiones de reparto asociadas"<<endl;
 	}
+}
+void rutaMasCorta(string oficinaOrigen, string oficinaDestino,  Grafo<Oficina*> &grafo,list<Oficina*> &oficinasMemoria)
+{
+	double distancia[grafo.tam()];
+	bool visto[grafo.tam()];
+	list<NodoGrafo<Oficina*>*> listaAux = grafo.getVertices();
+	NodoGrafo<Oficina*>* verticeOficinaNodo;
+	list<par> listaVecinosVerticeOficinaNodo;
+	int i = 0;
+	for(list<NodoGrafo<Oficina*>*>::iterator it=listaAux.begin(); it != listaAux.end(); ++it ) {
+		if(!siConecta(oficinaOrigen,(*it)->getDato()->getCodigo(),grafo, oficinasMemoria)) {
+
+			distancia[i] = 60000;
+
+		}else{
+			distancia[i] = buscarVertice2( oficinaOrigen,grafo)->getPesoVecino((*it)->getDato());
+		}
+		i++;
+	}
+	i = 0;
+	for(list<NodoGrafo<Oficina*>*>::iterator it=listaAux.begin(); it != listaAux.end(); ++it) {
+		if((*it)->getDato()->getCodigo() == oficinaOrigen) {
+			distancia[i] = 0;
+			visto[i] = true;
+		}else{
+			visto[i] = false;
+		}
+		i++;
+	}
+	for(int j = 0; j < grafo.tam(); j++)
+		cout<<distancia[j]<< " "<< endl;
+	i= 0;
+	int vertice = 0;
+	while(!vistosTodos(visto, grafo.tam()))
+	{
+		for( i = 0; i < grafo.tam(); i++)
+		{
+			if(!visto[i])
+			{
+				vertice = minimo(distancia, grafo.tam());
+				visto[vertice] = true;
+				break;
+			}
+		}
+		i = 0;
+		verticeOficinaNodo = buscarVertice(vertice, grafo);
+		listaVecinosVerticeOficinaNodo = verticeOficinaNodo->getVecinos();
+		for(list<par>::iterator it=listaVecinosVerticeOficinaNodo.begin(); it != listaVecinosVerticeOficinaNodo.end(); ++it)
+		{
+			verticeOficinaNodo->getPesoVecino((*it).first->getDato());
+			if((*it).first != NULL )
+			{
+				if(distancia[sacarIndice((*it).first->getDato()->getCodigo(),grafo)] > (distancia[vertice] +
+				                                                                        verticeOficinaNodo->getPesoVecino((*it).first->getDato()))) {
+
+					distancia[sacarIndice((*it).first->getDato()->getCodigo(),grafo)] = distancia[vertice] +
+					                                                                    verticeOficinaNodo->getPesoVecino((*it).first->getDato());
+				}
+			}
+			i++;
+
+		}
+	}
+}
+bool siConecta(string oficinaOrigen, string oficinaDestino, Grafo<Oficina*> &grafo,list<Oficina*> &oficinasMemoria)
+{
+	return grafo.existeVertice(buscarOficina2(oficinaOrigen,oficinasMemoria))->buscarVecino2(buscarOficina2(oficinaDestino,oficinasMemoria));
+}
+bool vistosTodos(bool vistos[], int cantidad)
+{
+	int cuenta = 0;
+	for(int i = 0; i< cantidad; i++)
+	{
+		if(vistos[i])
+			cuenta++;
+	}
+	if(cuenta == cantidad)
+		return true;
+	else return false;
+}
+int minimo(double distancia[], int cantidad)
+{
+	double minimo = 60999;
+	int salida = 0;
+	for(int i = 0; i< cantidad; i++)
+	{
+		if(distancia[i] <= minimo && distancia[i] != -1)
+		{
+			minimo =  distancia[i];
+			salida = i;
+		}
+	}
+	return salida;
+}
+NodoGrafo<Oficina*>* buscarVertice( int vertice,Grafo<Oficina*> &grafo)
+{
+	list<NodoGrafo<Oficina*>*> listaAux = grafo.getVertices();
+	int i = 0;
+	for(list<NodoGrafo<Oficina*>*>::iterator it=listaAux.begin(); it != listaAux.end(); ++it ) {
+		if(i == vertice)
+			return (*it);
+	}
+	return nullptr;
+}
+NodoGrafo<Oficina*>* buscarVertice2( string codigoOficina,Grafo<Oficina*> &grafo)
+{
+	list<NodoGrafo<Oficina*>*> listaAux = grafo.getVertices();
+	int i = 0;
+	for(list<NodoGrafo<Oficina*>*>::iterator it=listaAux.begin(); it != listaAux.end(); ++it) {
+		if((*it)->getDato()->getCodigo() ==  codigoOficina)
+			return (*it);
+		i++;
+	}
+	return nullptr;
+}
+int sacarIndice(string codigoOficina,Grafo<Oficina*> &grafo)
+{
+	list<NodoGrafo<Oficina*>*> lista = grafo.getVertices();
+	int i = 0;
+	for(list<NodoGrafo<Oficina*>*>::iterator it=lista.begin(); it != lista.end(); ++it)
+	{
+		if((*it)->getDato()->getCodigo() ==  codigoOficina)
+			return i;
+		i++;
+	}
+	return -1;
 }

@@ -6,7 +6,7 @@
 
 template <typename T>
 class Grafo{
-    typedef pair<NodoGrafo<T>*,float> par;
+    typedef pair<NodoGrafo<T>*,double> par;
 	private:
 		list<NodoGrafo<T>*> vertices;
 	public:
@@ -14,15 +14,17 @@ class Grafo{
 		~Grafo();
 		void setVertices(list<NodoGrafo<T>*>);
 		list<NodoGrafo<T>*> getVertices();
-		bool insertarAristaDirigida(T de,T a, float costo);
-		bool insertarAristaNoDirigida(T de,T a, float costo);
+		bool insertarAristaDirigida(T de,T a, double costo);
+		bool insertarAristaNoDirigida(T de,T a, double costo);
 		bool insertarVertice(T val);
 		NodoGrafo<T>* existeVertice(T val);
+		bool existeVertice2(T val);
 		void recorridoPlano();
 		bool eliminarVerticeNoDirigido(T val);
 		void recorridoDFS(NodoGrafo<T>*);
 		void recorridoBFS(NodoGrafo<T>* val);
 		bool eliminarAristaNoDirigida(T val,T val2);
+		int tam();
 
 };
 

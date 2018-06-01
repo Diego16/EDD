@@ -28,6 +28,8 @@ class NodoGrafo{
 		void setVisitado(bool);
 		bool getVisitado();
 		bool eliminarConexion(T);
+		bool buscarVecino2(T val);
+		double getPesoVecino(T val);
 };
 
 

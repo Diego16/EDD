@@ -15,7 +15,7 @@
 #include <cmath>
 #include <cstring>
 #include <vector>
-#include "Graph.h"
+#include "Grafo.h"
 
 using namespace std;
 
@@ -29,8 +29,8 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
                       string codigoOficinaIn, string nombreOficinaIn, string direccionOficinaIn
                       ,string ciudadOficinaIn, string codigoRegionIn, string nombreRegionIn,
                       list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria,list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria);
-bool registrarOficina(string codigo, string nombre, string direccion, string ciudad,list<Oficina*> &oficinasMemoria);
-bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria);
+bool registrarOficina(string codigo, string nombre, string direccion, string ciudad,list<Oficina*> &oficinasMemoria, Grafo<Oficina*> &grafo);
+bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria, Grafo<Oficina*> &grafo,double distanciaOficinaPadre);
 bool registrarPaqueteUnico(string cedulaRemitenteIn, string cedulaDestinatarioIn, string pesoIn, string tipoContenidoIn, string numGuiaIn,list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria);
 bool buscarPaquete(string numGuiaIn, list<Paquete*> &paquetesMemoria);
 Persona* buscarPersona2(string cedulaIn, list<Persona*> &personasMemoria);
@@ -59,6 +59,7 @@ int main()
 	list<Paquete*> listInP;
 	list<Oficina*> listInO;
 	list<Region*> listInR;
+	Grafo<Oficina*> grafoOficina;
 	while(on)
 	{
 		cout<<"$ ";
@@ -124,6 +125,11 @@ int main()
 				else
 				{
 					cout<<"El archivo "<<lineIn<<" no existe o contiene información inválida"<<endl;
+				}
+				cout<<listInR.size()<<endl;
+				for(list<Region*>::iterator itC=listInR.begin(); itC != listInR.end(); ++itC)
+				{
+					cout<<(*itC)->getCodigo()<<endl;
 				}
 			}
 			else
@@ -209,6 +215,7 @@ int main()
 			if (cantCmd==1)
 			{
 				string codReg, nombre, codigoOficinaPadre;
+				double distanciaOficina;
 				cout<<"Codigo de la region: ";
 				cin>>codReg;
 				cout<<"Nombre de la region: ";
@@ -216,7 +223,9 @@ int main()
 				getline(cin,nombre);
 				cout<<"Codigo oficina: ";
 				cin>>codigoOficinaPadre;
-				if(registrarRegion(codReg, nombre, codigoOficinaPadre,listInO,listInR))
+				cout<<"Distacia a oficina padre: ";
+				cin>>distanciaOficina;
+				if(registrarRegion(codReg, nombre, codigoOficinaPadre,listInO,listInR,grafoOficina,distanciaOficina))
 					cout<<"La region identificada con el codigo "<<codReg<<" ha sido registrada exitosamente"<<endl;
 				else
 					cout<<"La region identificada con el codigo "<<codReg<<" ya se encuentra registrado en el sistema"<<endl;
@@ -242,7 +251,7 @@ int main()
 				cout<<"Ciudad: ";
 				cin.ignore();
 				getline(cin,ciudad);
-				if(registrarOficina(codOfi,nombre,direccion,ciudad,listInO))
+				if(registrarOficina(codOfi,nombre,direccion,ciudad,listInO, grafoOficina))
 					cout<<"La oficina identificada con el codigo "<<codOfi<<" ha sido registrada exitosamente"<<endl;
 				else
 					cout<<"La oficina identificada con el codigo "<<codOfi<<" ya se encuentra registrada en el sistema"<<endl;
@@ -404,7 +413,7 @@ bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria, list<
 		{
 			getline (myfile,line);
 			vtoken = tokenizador(line, ',');
-			if(registrarPaquete(vtoken[10],vtoken[9],vtoken[8],vtoken[7],vtoken[6],vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], paquetesMemoria, personasMemoria, oficinasMemoria, regionesMemoria))
+			if(registrarPaquete(vtoken[10], vtoken[9], vtoken[8], vtoken[7], vtoken[6],vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], paquetesMemoria, personasMemoria, oficinasMemoria, regionesMemoria))
 			{
 				res=res;
 				exitos++;
@@ -438,7 +447,7 @@ bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria, list<
 	}
 	return false;
 }
-bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
+bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria,Grafo<Oficina*> &grafo)
 {
 	string line;
 	ifstream myfile(nombreArchivo.c_str());
@@ -454,7 +463,7 @@ bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
 		{
 			getline (myfile,line);
 			vtoken = tokenizador(line, ',');
-			if(registrarOficina(vtoken[3],vtoken[2],vtoken[1],vtoken[0],oficinasMemoria))
+			if(registrarOficina(vtoken[3],vtoken[2],vtoken[1],vtoken[0],oficinasMemoria,grafo))
 				exitos++;
 			else
 				fracasos++;
@@ -479,7 +488,7 @@ bool cargarOficinas(string nombreArchivo, list<Oficina*> &oficinasMemoria)
 	}
 	return false;
 }
-bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria)
+bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria,Grafo<Oficina*> &grafo)
 {
 	string line;
 	ifstream myfile(nombreArchivo.c_str());
@@ -495,7 +504,7 @@ bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<
 		{
 			getline (myfile,line);
 			vtoken = tokenizador(line, ',');
-			if(registrarRegion(vtoken[2],vtoken[1],vtoken[0],oficinasMemoria,regionesMemoria))
+			if(registrarRegion(vtoken[3],vtoken[2],vtoken[1],oficinasMemoria,regionesMemoria,grafo,atof(vtoken[0].c_str())))
 				exitos++;
 			else
 				fracasos++;
@@ -511,6 +520,7 @@ bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<
 }
 bool registrarPersona(string nombre, string apellido, string cedula, string direccion, string ciudad, string telefono, list<Persona*> &personasMemoria)
 {
+
 	if(!buscarPersona(cedula, personasMemoria))
 	{
 		Persona* personaAux = new Persona();
@@ -526,7 +536,7 @@ bool registrarPersona(string nombre, string apellido, string cedula, string dire
 	else
 		return false;
 }
-bool registrarOficina(string codigo, string nombre, string direccion, string ciudad,list<Oficina*> &oficinasMemoria)
+bool registrarOficina(string codigo, string nombre, string direccion, string ciudad,list<Oficina*> &oficinasMemoria, Grafo<Oficina*> &grafo)
 {
 	Oficina* oficinaAux = new Oficina();
 	if(!buscarOficina(codigo, oficinasMemoria))
@@ -537,28 +547,31 @@ bool registrarOficina(string codigo, string nombre, string direccion, string ciu
 		oficinaAux->setCiudad(ciudad);
 		oficinaAux->setPrincipal(false);
 		oficinasMemoria.push_back(oficinaAux);
+		grafo.insertarVertice(oficinaAux);
 		return true;
 	}
 	return false;
 }
-bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria)
+bool registrarRegion(string codigo, string nombre, string codigoOficinaPadre,list<Oficina*> &oficinasMemoria,list<Region*> &regionesMemoria, Grafo<Oficina*> &grafo,double distanciaOficinaPadre)
 {
 	Region* regionAux = new Region();
-	Oficina* oficinaAux;
+	Oficina* oficinaAuxOrigen;
+	Oficina* oficinaAuxDestino;
 	if(buscarOficina(codigoOficinaPadre,oficinasMemoria))
 	{
 		if(!buscarRegion(codigo,regionesMemoria))
 		{
 			regionAux->setCodigo(codigo);
 			regionAux->setNombre(nombre);
-			oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
-			registrarOficina(codigo, nombre, oficinaAux->getDireccion(),oficinaAux->getCiudad(),oficinasMemoria);
-			oficinaAux = buscarOficina2(codigo,oficinasMemoria);
-			regionAux->setOficinaDirecta(oficinaAux);
+			oficinaAuxOrigen = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
+			registrarOficina(codigo, nombre, oficinaAuxOrigen->getDireccion(),oficinaAuxOrigen->getCiudad(),oficinasMemoria, grafo);
+			oficinaAuxDestino = buscarOficina2(codigo,oficinasMemoria);
+			grafo.insertarVertice(oficinaAuxDestino);
+			regionAux->setOficinaDirecta(oficinaAuxDestino);
 			regionesMemoria.push_back(regionAux);
-			oficinaAux->getListaRegiones().push_back(regionAux);
-			oficinaAux = buscarOficina2(codigoOficinaPadre,oficinasMemoria);
-			oficinaAux->getListaRegiones().push_back(regionAux);
+			oficinaAuxDestino->getListaRegiones().push_back(regionAux);
+			oficinaAuxOrigen->getListaRegiones().push_back(regionAux);
+			grafo.insertarAristaNoDirigida(oficinaAuxOrigen,oficinaAuxDestino,distanciaOficinaPadre);
 			return true;
 		}
 		else
@@ -576,14 +589,16 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
 	Oficina* oAux = new Oficina();
 	if(!buscarPaquete(numGuiaIn, paquetesMemoria))
 	{
+
 		if(buscarOficina(codigoOficinaIn, oficinasMemoria))
 		{
+
 			oAux = buscarOficina2(codigoOficinaIn, oficinasMemoria);
 			if(buscarRegion(codigoRegionIn,oAux->getListaRegiones()))
 			{
 				paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
 				paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-				paqueteAux->setPeso(stoi(pesoIn));
+				paqueteAux->setPeso(atoi(pesoIn.c_str()));
 				paqueteAux->setNumGuia(numGuiaIn);
 				paqueteAux->setRegionDestino(codigoRegionIn);
 				paquetesMemoria.push_back(paqueteAux);
@@ -595,25 +610,30 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
 	}
 	return false;
 }
-bool registrarPaqueteUnico(string cedulaRemitenteIn, string cedulaDestinatarioIn, string pesoIn, string tipoContenidoIn, string numGuiaIn,list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria)
+bool registrarPaquete2(string cedulaRemitenteIn, string cedulaDestinatarioIn, string pesoIn, string tipoContenidoIn, string numGuiaIn,
+                       string codigoOficinaIn,
+                       list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria,list<Oficina*> &oficinasMemoria)
 {
-	Paquete* paqueteAux;
+	Paquete* paqueteAux = new Paquete();
+	Oficina* oAux = new Oficina();
 	if(!buscarPaquete(numGuiaIn, paquetesMemoria))
 	{
-		paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
-		paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-		paqueteAux->setPeso(stoi(pesoIn));
-		paqueteAux->setNumGuia(numGuiaIn);
-		paquetesMemoria.insert(paquetesMemoria.begin(), paqueteAux);
-		return true;
+		if(buscarOficina(codigoOficinaIn, oficinasMemoria))
+		{
+			oAux = buscarOficina2(codigoOficinaIn, oficinasMemoria);
+			paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
+			paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
+			paqueteAux->setPeso(atoi(pesoIn.c_str()));
+			paqueteAux->setNumGuia(numGuiaIn);
+			paquetesMemoria.push_back(paqueteAux);
+			buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaPaquetes().push_back(paqueteAux);
+			return true;
+		}
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
-void contarPaquetes(list<Oficina*> &oficinasMemoria){
-
+void contarPaquetes(list<Oficina*> &oficinasMemoria)
+{
 	int suma = 0, acum=0;
 	if(oficinasMemoria.size()==0)
 	{
@@ -831,6 +851,7 @@ void distribuirPaquetes(string codigoOficina,list<Oficina*> &oficinasMemoria,lis
 				{
 					(*itB)->getListaPaquetes().push_back(buscarOficina2(codigoOficina,oficinasMemoria)->getListaPaquetes().back());
 					buscarRegion2(codigoOficina,regionesMemoria)->getListaPaquetes().pop_back();
+
 				}
 			}
 		}

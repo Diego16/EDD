@@ -419,8 +419,7 @@ bool cargarPersonas(string nombreArchivo, list<Persona*> &personasMemoria)
 	}
 	return false;
 }
-bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria,
-                    list<Persona*> &personasMemoria,list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria)
+bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria, list<Persona*> &personasMemoria,list<Oficina*> &oficinasMemoria, list<Region*> &regionesMemoria)
 {
 	string line;
 	ifstream myfile(nombreArchivo.c_str());
@@ -436,7 +435,7 @@ bool cargarPaquetes(string nombreArchivo, list<Paquete*> &paquetesMemoria,
 		{
 			getline (myfile,line);
 			vtoken = tokenizador(line, ',');
-			if(registrarPaquete(vtoken[10], vtoken[9], vtoken[8], vtoken[7], vtoken[6],vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], paquetesMemoria, personasMemoria, oficinasMemoria, regionesMemoria))
+			if(registrarPaquete(vtoken[10],vtoken[9],vtoken[8],vtoken[7],vtoken[6],vtoken[5], vtoken[4], vtoken[3], vtoken[2], vtoken[1], vtoken[0], paquetesMemoria, personasMemoria, oficinasMemoria, regionesMemoria))
 			{
 				res=res;
 				exitos++;
@@ -541,6 +540,55 @@ bool cargarRegiones(string nombreArchivo, list<Oficina*> &oficinasMemoria, list<
 		cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
 	return true;
 }
+bool cargarConexiones(string nombreArchivo, Grafo<Oficina*> &grafo,list<Oficina*> &oficinasMemoria)
+{
+	string line;
+	ifstream myfile(nombreArchivo.c_str());
+	vector<string> vtoken;
+	int res = 0;
+	int exitos = 0;
+	int fracasos = 0;
+	if (myfile.is_open())
+	{
+		getline (myfile,line);
+		int i = 0;
+		while((myfile.peek()!=EOF))
+		{
+			getline (myfile,line);
+			vtoken = tokenizador(line, ',');
+			if(buscarOficina(vtoken[2],oficinasMemoria) && buscarOficina(vtoken[1],oficinasMemoria))
+			{
+				grafo.insertarAristaNoDirigida(buscarOficina2(vtoken[2],oficinasMemoria),buscarOficina2(vtoken[1],oficinasMemoria), atof(vtoken[0].c_str()));
+				exitos++;
+				res=res;
+			}
+			else
+			{
+				res= 1;
+				fracasos++;
+			}
+			i++;
+		}
+	}
+	else
+		return false;
+	myfile.close();
+	if(res==1)
+	{
+		cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
+	}
+	if(exitos==0)
+	{
+		cout<<"No se conecto ningun elemento"<<endl;
+		return false;
+	}
+	else if(exitos>0)
+	{
+		cout<<"Se conecto exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
+		return true;
+	}
+	return false;
+}
 bool registrarPersona(string nombre, string apellido, string cedula, string direccion,
                       string ciudad, string telefono, list<Persona*> &personasMemoria)
 {
@@ -616,16 +664,14 @@ bool registrarPaquete(string cedulaRemitenteIn, string cedulaDestinatarioIn, str
 	Oficina* oAux = new Oficina();
 	if(!buscarPaquete(numGuiaIn, paquetesMemoria))
 	{
-
 		if(buscarOficina(codigoOficinaIn, oficinasMemoria))
 		{
-
 			oAux = buscarOficina2(codigoOficinaIn, oficinasMemoria);
 			if(buscarRegion(codigoRegionIn,oAux->getListaRegiones()))
 			{
 				paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
 				paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-				paqueteAux->setPeso(atoi(pesoIn.c_str()));
+				paqueteAux->setPeso(stoi(pesoIn));
 				paqueteAux->setNumGuia(numGuiaIn);
 				paqueteAux->setRegionDestino(codigoRegionIn);
 				paquetesMemoria.push_back(paqueteAux);
@@ -650,62 +696,13 @@ bool registrarPaquete2(string cedulaRemitenteIn, string cedulaDestinatarioIn, st
 			oAux = buscarOficina2(codigoOficinaIn, oficinasMemoria);
 			paqueteAux->setRemitente(buscarPersona2(cedulaRemitenteIn, personasMemoria));
 			paqueteAux->setDestinatario(buscarPersona2(cedulaDestinatarioIn, personasMemoria));
-			paqueteAux->setPeso(atoi(pesoIn.c_str()));
+			paqueteAux->setPeso(stoi(pesoIn));
 			paqueteAux->setNumGuia(numGuiaIn);
 			paqueteAux->setRegionDestino(codigoRegionIn);
 			paquetesMemoria.push_back(paqueteAux);
 			buscarOficina2(codigoOficinaIn, oficinasMemoria)->getListaPaquetes().push_back(paqueteAux);
 			return true;
 		}
-	}
-	return false;
-}
-bool cargarConexiones(string nombreArchivo, Grafo<Oficina*> &grafo,list<Oficina*> &oficinasMemoria){
-
-	string line;
-	ifstream myfile(nombreArchivo.c_str());
-	vector<string> vtoken;
-	int res = 0;
-	int exitos = 0;
-	int fracasos = 0;
-	if (myfile.is_open())
-	{
-		getline (myfile,line);
-		int i = 0;
-		while((myfile.peek()!=EOF))
-		{
-			getline (myfile,line);
-			vtoken = tokenizador(line, ',');
-			if(buscarOficina(vtoken[2],oficinasMemoria) && buscarOficina(vtoken[1],oficinasMemoria))
-			{
-				grafo.insertarAristaNoDirigida(buscarOficina2(vtoken[2],oficinasMemoria),buscarOficina2(vtoken[1],oficinasMemoria), atof(vtoken[0].c_str()));
-				exitos++;
-				res=res;
-			}
-			else
-			{
-				res= 1;
-				fracasos++;
-			}
-			i++;
-		}
-	}
-	else
-		return false;
-	myfile.close();
-	if(res==1)
-	{
-		cout<<"Se encontraron datos repetidos, estos no fueron tenidos en cuenta"<<endl;
-	}
-	if(exitos==0)
-	{
-		cout<<"No se conecto ningun elemento"<<endl;
-		return false;
-	}
-	else if(exitos>0)
-	{
-		cout<<"Se conecto exitosamente "<<exitos<<" de "<<fracasos + exitos<<" elementos."<<endl;
-		return true;
 	}
 	return false;
 }
@@ -823,6 +820,8 @@ Region* buscarRegion2(string codigo, list<Region*> &regionesMemoria)
 }
 bool buscarPaquete(string numGuiaIn, list<Paquete*> &paquetesMemoria)
 {
+	if(paquetesMemoria.size()==0)
+		return false;
 	for (list<Paquete*>::iterator itB=paquetesMemoria.begin(); itB != paquetesMemoria.end(); ++itB)
 	{
 		if((*itB)->getNumGuia() == numGuiaIn)

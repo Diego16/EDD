@@ -706,8 +706,8 @@ bool registrarPaquete2(string cedulaRemitenteIn, string cedulaDestinatarioIn, st
 	}
 	return false;
 }
-void contarPaquetes(list<Oficina*> &oficinasMemoria)
-{
+void contarPaquetes(list<Oficina*> &oficinasMemoria){
+
 	int suma = 0, acum=0;
 	if(oficinasMemoria.size()==0)
 	{
@@ -718,6 +718,12 @@ void contarPaquetes(list<Oficina*> &oficinasMemoria)
 		cout<<"=========================================="<<endl;
 		for (list<Oficina*>::iterator itB=oficinasMemoria.begin(); itB != oficinasMemoria.end(); ++itB)
 		{
+			if((*itB)->getPrincipal())
+			{
+				cout<<(*itB)->getListaPaquetes().size()<<" paquetes en la oficina "<<(*itB)->getCodigo()<<", Oficina principal"<<endl;
+				suma += (*itB)->getListaPaquetes().size();
+				cout<<"------------------------------------------"<<endl;
+			}
 			for (list<Region*>::iterator itC=(*itB)->getListaRegiones().begin(); itC != (*itB)->getListaRegiones().end(); ++itC)
 			{
 				if ((*itB)->getNombre()==(*itC)->getNombre())
